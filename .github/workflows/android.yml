@@ -20,7 +20,10 @@ jobs:
   unit_test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      # https://github.com/actions/checkout
+      - name: checkout
+        uses: actions/checkout@v3
+
       - name: unit test
         run: |
           chmod +x gradlew
@@ -29,9 +32,9 @@ jobs:
   # instrumented_test:
   #   runs-on: macos-latest
   #   steps:
-  #     - uses: actions/checkout@v2
+  #     - uses: actions/checkout@v3
   #     - name: set up jdk
-  #       uses: actions/setup-java@v2
+  #       uses: actions/setup-java@v3
   #       with:
   #         java-version: '11'
   #         distribution: 'adopt'
@@ -50,10 +53,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
+      # https://github.com/actions/setup-java
       - name: set up jdk
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           java-version: '11'
           distribution: 'adopt'
@@ -66,6 +70,7 @@ jobs:
           echo "VERSION_NAME=${{ env.versionName }}.$versionCode" >> $GITHUB_ENV
 
       # https://github.com/marketplace/actions/increment-the-version-code-of-your-project
+      # https://github.com/chkfung/android-version-actions/issues/7
       - name: set version
         uses: chkfung/android-version-actions@v1.1
         with:
@@ -79,6 +84,7 @@ jobs:
           ./gradlew assembleDebug
 
       # https://github.com/marketplace/actions/sign-android-release
+      # https://github.com/r0adkll/sign-android-release/issues/71
       - name: sign
         uses: r0adkll/sign-android-release@v1
         id: sign
@@ -93,7 +99,7 @@ jobs:
 
       # https://github.com/actions/upload-artifact
       - name: upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: debug
           path: ${{ steps.sign.outputs.signedReleaseFile }}
@@ -103,10 +109,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: set up jdk
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           java-version: '11'
           distribution: 'adopt'
@@ -139,7 +145,7 @@ jobs:
           done
 
       - name: upload unsigned artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: release
           path: ./*.apk
@@ -156,7 +162,7 @@ jobs:
           keyPassword: ${{ secrets.KEY_PASSWORD_RELEASE }}
 
       - name: upload signed artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: release
           path: ${{ steps.sign.outputs.signedReleaseFile }}
@@ -170,7 +176,7 @@ jobs:
     steps:
       # https://github.com/actions/download-artifact
       - name: download artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           path: ./
 
@@ -274,7 +280,7 @@ jobs:
 
 # https://github.com/actions/upload-artifact
 # - name: upload artifact
-#   uses: actions/upload-artifact@v2
+#   uses: actions/upload-artifact@v3
 #   with:
 #     path: |
 #       ./app/build/outputs/apk/debug/app-debug-signed.apk
