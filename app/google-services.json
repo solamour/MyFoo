@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "631388564026",
+    "project_id": "myfoo-ex",
+    "storage_bucket": "myfoo-ex.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:631388564026:android:bd1d2892477fd6226fe303",
+        "android_client_info": {
+          "package_name": "org.solamour.myfoo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "631388564026-hmfbfka7a11b47s7umif1vbferjpumqv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMQPRrw7eADbNOwBdD8l6v16EY-Tw2bo8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "631388564026-hmfbfka7a11b47s7umif1vbferjpumqv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

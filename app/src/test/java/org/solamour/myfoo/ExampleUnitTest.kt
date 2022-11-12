@@ -1,4 +1,4 @@
-package com.example.primarydetail
+package org.solamour.myfoo
 
 import org.junit.Test
 
