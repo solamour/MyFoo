@@ -103,7 +103,7 @@ jobs:
         with:
           name: debug
           path: ${{ steps.sign.outputs.signedReleaseFile }}
-          retention-days: 1
+          # retention-days: 1     1 ~ 90 (default)
 
   build_release:
     runs-on: ubuntu-latest
@@ -149,7 +149,6 @@ jobs:
         with:
           name: release
           path: ./*.apk
-          retention-days: 1
 
       - name: sign
         uses: r0adkll/sign-android-release@v1
@@ -166,7 +165,6 @@ jobs:
         with:
           name: release
           path: ${{ steps.sign.outputs.signedReleaseFile }}
-          retention-days: 1
 
   create_release:
     # needs: [unit_test, instrumented_test, build_debug, build_release]
