@@ -39,12 +39,10 @@ jobs:
   #         java-version: '11'
   #         distribution: 'adopt'
   #         cache: gradle
-  #     # - name: grant execute permission for gradlew
-  #     #   run: chmod +x gradlew
   #     - name: instrumented test
   #       uses: reactivecircus/android-emulator-runner@v2
   #       with:
-  #         api-level: 29
+  #         api-level: 33
   #         script: |
   #           chmod +x gradlew
   #           ./gradlew connectedAndroidTest
@@ -169,6 +167,7 @@ jobs:
           retention-days: 1
 
   create_release:
+    if: github.event_name == 'push'
     # needs: [unit_test, instrumented_test, build_debug, build_release]
     # needs: [build_debug, build_release]
     needs: [unit_test, build_debug, build_release]
