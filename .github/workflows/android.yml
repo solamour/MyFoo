@@ -17,7 +17,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  unit_test:
+  testDebugUnitTest:
     runs-on: ubuntu-latest
     steps:
       # https://github.com/actions/checkout
@@ -29,7 +29,7 @@ jobs:
           chmod +x gradlew
           ./gradlew testDebugUnitTest
 
-  # instrumented_test:
+  # connectedAndroidTest:
   #   runs-on: macos-latest
   #   steps:
   #     - uses: actions/checkout@v3
@@ -47,7 +47,7 @@ jobs:
   #           chmod +x gradlew
   #           ./gradlew connectedAndroidTest
 
-  build_debug:
+  assembleDebug:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -103,7 +103,7 @@ jobs:
           path: ${{ steps.sign.outputs.signedReleaseFile }}
           retention-days: 1     # 1 ~ 90 (default).
 
-  build_release:
+  assembleRelease:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -166,11 +166,11 @@ jobs:
           path: ${{ steps.sign.outputs.signedReleaseFile }}
           retention-days: 1
 
-  create_release:
+  createRelease:
     if: github.event_name == 'push'
-    # needs: [unit_test, instrumented_test, build_debug, build_release]
-    # needs: [build_debug, build_release]
-    needs: [unit_test, build_debug, build_release]
+    # needs: [testDebugUnitTest, connectedAndroidTest, assembleDebug, assembleRelease]
+    # needs: [assembleDebug, assembleRelease]
+    needs: [testDebugUnitTest, assembleDebug, assembleRelease]
     runs-on: ubuntu-latest
     steps:
       # https://github.com/actions/download-artifact
