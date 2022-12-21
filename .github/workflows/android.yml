@@ -20,27 +20,12 @@ jobs:
   testDebugUnitTest:
     uses: ./.github/workflows/testDebugUnitTest.yml
 
-  connectedDebugAndroidTest:
-    uses: ./.github/workflows/connectedDebugAndroidTest.yml
-
-  #-------------------------------------------------------------------------------------------------
   # connectedDebugAndroidTest:
-  #   runs-on: macos-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - name: setup java
-  #       uses: actions/setup-java@v3
-  #       with:
-  #         java-version: '11'
-  #         distribution: 'adopt'
-  #         cache: gradle
-  #     - name: connectedDebugAndroidTest
-  #       uses: reactivecircus/android-emulator-runner@v2
-  #       with:
-  #         api-level: 33
-  #         script: |
-  #           chmod +x gradlew
-  #           ./gradlew connectedDebugAndroidTest
+  #   uses: ./.github/workflows/connectedDebugAndroidTest.yml
+
+  assembleDebug:
+    uses: ./.github/workflows/assembleDebug.yml
+    secrets: inherit
 
   #-------------------------------------------------------------------------------------------------
   # assembleDebug:
@@ -97,7 +82,7 @@ jobs:
   #       with:
   #         name: debug
   #         path: ${{ steps.sign.outputs.signedReleaseFile }}
-  #         retention-days: 1     # 1 ~ 90 (default).
+  #         # retention-days: 1     # Default and max is 90.
 
   #-------------------------------------------------------------------------------------------------
   # assembleRelease:

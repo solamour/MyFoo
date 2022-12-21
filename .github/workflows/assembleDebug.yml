@@ -1,0 +1,61 @@
+name: assembleDebug
+
+on:
+  workflow_call:
+
+jobs:
+  assembleDebug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      # https://github.com/actions/setup-java
+      - name: set up jdk
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+          cache: gradle
+
+      - name: set versionCode and versionName
+        run: |
+          versionCode=$(( ${{ env.versionCode }} + ${{ env.offset }} ))
+          echo "VERSION_CODE=$versionCode" >> $GITHUB_ENV
+          echo "VERSION_NAME=${{ env.versionName }}.$versionCode" >> $GITHUB_ENV
+
+      # https://github.com/marketplace/actions/increment-the-version-code-of-your-project
+      # https://github.com/chkfung/android-version-actions/issues/7
+      - name: set version
+        uses: chkfung/android-version-actions@v1.1
+        with:
+          gradlePath: app/build.gradle
+          versionCode: ${{ env.VERSION_CODE }}
+          versionName: ${{ env.VERSION_NAME }}
+
+      - name: build
+        run: |
+          chmod +x ./gradlew
+          ./gradlew assembleDebug
+
+      # https://github.com/marketplace/actions/sign-android-release
+      # https://github.com/r0adkll/sign-android-release/issues/71
+      - name: sign
+        uses: r0adkll/sign-android-release@v1
+        id: sign
+        with:
+          releaseDirectory: ./app/build/outputs/apk/debug/
+          signingKeyBase64: ${{ secrets.SIGNING_KEY_DEBUG }}
+          alias: ${{ secrets.ALIAS_DEBUG }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD_DEBUG }}
+          keyPassword: ${{ secrets.KEY_PASSWORD_DEBUG }}
+        # env:
+        #   BUILD_TOOLS_VERSION: "32.0.0"
+
+      # https://github.com/actions/upload-artifact
+      - name: upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: debug
+          path: ${{ steps.sign.outputs.signedReleaseFile }}
+          # retention-days: 1     # Default and max is 90.

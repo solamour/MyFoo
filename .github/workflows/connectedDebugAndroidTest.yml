@@ -14,6 +14,7 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
           cache: gradle
+      # https://github.com/ReactiveCircus/android-emulator-runner
       - name: connectedDebugAndroidTest
         uses: reactivecircus/android-emulator-runner@v2
         with:
