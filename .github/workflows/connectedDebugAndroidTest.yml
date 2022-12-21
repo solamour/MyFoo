@@ -1,0 +1,25 @@
+name: connectedDebugAndroidTest
+
+on:
+  workflow_call:
+
+jobs:
+  connectedDebugAndroidTest:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: setup java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+          cache: gradle
+      - name: connectedDebugAndroidTest
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 33
+          target: google_apis
+          arch: x86_64
+          script: |
+            chmod +x gradlew
+            ./gradlew connectedDebugAndroidTest
