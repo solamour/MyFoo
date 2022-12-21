@@ -1,0 +1,17 @@
+name: testDebugUnitTest
+
+on:
+  workflow_call:
+
+jobs:
+  testDebugUnitTest:
+    runs-on: ubuntu-latest
+    steps:
+      # https://github.com/actions/checkout
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: testDebugUnitTest
+        run: |
+          chmod +x gradlew
+          ./gradlew testDebugUnitTest
