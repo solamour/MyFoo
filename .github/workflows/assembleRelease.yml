@@ -2,6 +2,13 @@ name: assembleRelease
 
 on:
   workflow_call:
+    inputs:
+      versionCode:
+        required: true
+        type: string
+      versionName:
+        required: true
+        type: string
 
 jobs:
   assembleRelease:
@@ -19,9 +26,8 @@ jobs:
 
       - name: set versionCode and versionName
         run: |
-          versionCode=$(( ${{ env.versionCode }} + ${{ env.offset }} ))
-          echo "VERSION_CODE=$versionCode" >> $GITHUB_ENV
-          echo "VERSION_NAME=${{ env.versionName }}.$versionCode" >> $GITHUB_ENV
+          echo "VERSION_CODE=${{ inputs.versionCode }}" >> $GITHUB_ENV
+          echo "VERSION_NAME=${{ inputs.versionName }}.${{ inputs.versionCode }}" >> $GITHUB_ENV
 
       - name: set version
         uses: chkfung/android-version-actions@v1.1
@@ -65,3 +71,4 @@ jobs:
         with:
           name: release
           path: ${{ steps.sign.outputs.signedReleaseFile }}
+          retention-days: 1

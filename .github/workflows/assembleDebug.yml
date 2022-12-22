@@ -2,6 +2,13 @@ name: assembleDebug
 
 on:
   workflow_call:
+    inputs:
+      versionCode:
+        required: true
+        type: string
+      versionName:
+        required: true
+        type: string
 
 jobs:
   assembleDebug:
@@ -18,11 +25,10 @@ jobs:
           distribution: 'adopt'
           cache: gradle
 
-      - name: set versionCode and versionName
+      - name: set versionCode and versionName 
         run: |
-          versionCode=$(( ${{ env.versionCode }} + ${{ env.offset }} ))
-          echo "VERSION_CODE=$versionCode" >> $GITHUB_ENV
-          echo "VERSION_NAME=${{ env.versionName }}.$versionCode" >> $GITHUB_ENV
+          echo "VERSION_CODE=${{ inputs.versionCode }}" >> $GITHUB_ENV
+          echo "VERSION_NAME=${{ inputs.versionName }}.${{ inputs.versionCode }}" >> $GITHUB_ENV
 
       # https://github.com/marketplace/actions/increment-the-version-code-of-your-project
       # https://github.com/chkfung/android-version-actions/issues/7
@@ -58,4 +64,4 @@ jobs:
         with:
           name: debug
           path: ${{ steps.sign.outputs.signedReleaseFile }}
-          # retention-days: 1     # Default and max is 90.
+          retention-days: 1     # Default and max is 90.
