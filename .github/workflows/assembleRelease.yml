@@ -9,6 +9,9 @@ on:
       versionName:
         required: true
         type: string
+      repoName:
+        required: true
+        type: string
 
 jobs:
   assembleRelease:
@@ -28,6 +31,7 @@ jobs:
         run: |
           echo "VERSION_CODE=${{ inputs.versionCode }}" >> $GITHUB_ENV
           echo "VERSION_NAME=${{ inputs.versionName }}.${{ inputs.versionCode }}" >> $GITHUB_ENV
+          echo "REPO_NAME=${{ inputs.repoName }}" >> $GITHUB_ENV
 
       - name: set version
         uses: chkfung/android-version-actions@v1.1
@@ -41,13 +45,23 @@ jobs:
           chmod +x ./gradlew
           ./gradlew assembleRelease
 
-      - name: copy
+      - name: rename artifact
         run: |
-          for file_name in ./app/build/outputs/apk/release/*.apk; do            
-            name=$(basename $file_name .apk)
-            extension="${file_name##*.}"
-            cp -- "$file_name" "$name-unsigned.$extension"
-          done
+          # There should be only 1 apk file (e.g. "app-release-x.x.xxx.apk").
+          artifact=(./app/build/outputs/apk/release/*.apk)
+
+          # Rename "app-release-x.x.xxx.apk" to "$REPO_NAME-release-x.x.xxx.apk".
+          dir_name="$(dirname $artifact)"                 # "./app/build/outputs/apk/release".
+          file_name="$(basename $artifact)"               # "app-release-x.x.xxx.apk".
+          new_name="${file_name/#app/$REPO_NAME}"         # "$REPO_NAME-release-x.x.xxx.apk".
+          mv -- "$dir_name"/{"$file_name","$new_name"}
+          
+          # Copy "$REPO_NAME-release-x.x.xxx.apk" to "$REPO_NAME-release-x.x.xxx-unsigned.apk".
+          artifact="$dir_name/$new_name"
+          ext="${artifact##*.}"
+          file_name="$(basename $artifact .$ext)"
+          new_name="${file_name}-unsigned.$ext"
+          cp -- "$artifact" "./$new_name"
 
       - name: upload unsigned artifact
         uses: actions/upload-artifact@v3
