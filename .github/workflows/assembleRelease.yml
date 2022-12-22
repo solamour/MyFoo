@@ -1,0 +1,67 @@
+name: assembleRelease
+
+on:
+  workflow_call:
+
+jobs:
+  assembleRelease:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: set up jdk
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+          cache: gradle
+
+      - name: set versionCode and versionName
+        run: |
+          versionCode=$(( ${{ env.versionCode }} + ${{ env.offset }} ))
+          echo "VERSION_CODE=$versionCode" >> $GITHUB_ENV
+          echo "VERSION_NAME=${{ env.versionName }}.$versionCode" >> $GITHUB_ENV
+
+      - name: set version
+        uses: chkfung/android-version-actions@v1.1
+        with:
+          gradlePath: app/build.gradle
+          versionCode: ${{ env.VERSION_CODE }}
+          versionName: ${{ env.VERSION_NAME }}
+
+      - name: build
+        run: |
+          chmod +x ./gradlew
+          ./gradlew assembleRelease
+
+      - name: copy
+        run: |
+          for file_name in ./app/build/outputs/apk/release/*.apk; do            
+            name=$(basename $file_name .apk)
+            extension="${file_name##*.}"
+            cp -- "$file_name" "$name-unsigned.$extension"
+          done
+
+      - name: upload unsigned artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: release
+          path: ./*.apk
+          retention-days: 1
+
+      - name: sign
+        uses: r0adkll/sign-android-release@v1
+        id: sign
+        with:
+          releaseDirectory: ./app/build/outputs/apk/release/
+          signingKeyBase64: ${{ secrets.SIGNING_KEY_RELEASE }}
+          alias: ${{ secrets.ALIAS_RELEASE }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD_RELEASE }}
+          keyPassword: ${{ secrets.KEY_PASSWORD_RELEASE }}
+
+      - name: upload signed artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: release
+          path: ${{ steps.sign.outputs.signedReleaseFile }}
