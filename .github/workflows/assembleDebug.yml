@@ -9,6 +9,9 @@ on:
       versionName:
         required: true
         type: string
+      repoName:
+        required: true
+        type: string
 
 jobs:
   assembleDebug:
@@ -29,6 +32,7 @@ jobs:
         run: |
           echo "VERSION_CODE=${{ inputs.versionCode }}" >> $GITHUB_ENV
           echo "VERSION_NAME=${{ inputs.versionName }}.${{ inputs.versionCode }}" >> $GITHUB_ENV
+          echo "REPO_NAME=${{ inputs.repoName }}" >> $GITHUB_ENV
 
       # https://github.com/marketplace/actions/increment-the-version-code-of-your-project
       # https://github.com/chkfung/android-version-actions/issues/7

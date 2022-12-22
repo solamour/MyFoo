@@ -4,8 +4,8 @@ name: Android Workflow
 
 env:
   versionCode: $GITHUB_RUN_NUMBER
-  versionName: "1.0"
   versionOffset: 100
+  versionName: "1.0"
 
 on:
   push:
@@ -21,14 +21,17 @@ jobs:
   versionInfo:
     runs-on: ubuntu-latest
     outputs:
-      versionName: ${{ steps.versionInfo.outputs.versionName }}
       versionCode: ${{ steps.versionInfo.outputs.versionCode }}
+      versionName: ${{ steps.versionInfo.outputs.versionName }}
+      repoName: ${{ steps.versionInfo.outputs.repoName }}
     steps:
       - name: set version info
         id: versionInfo
         run: |
-          echo "versionCode=$(( ${{ env.versionCode }} + ${{ env.versionOffset }} ))" >> $GITHUB_OUTPUT
+          version_code=$(( ${{ env.versionCode }} + ${{ env.versionOffset }} ))
+          echo "versionCode=$version_code" >> $GITHUB_OUTPUT
           echo "versionName=${{ env.versionName }}" >> $GITHUB_OUTPUT
+          echo "repoName=${GITHUB_REPOSITORY#*/}" >> $GITHUB_OUTPUT
 
   testDebugUnitTest:
     uses: ./.github/workflows/testDebugUnitTest.yml
@@ -42,6 +45,7 @@ jobs:
     with:
       versionCode: ${{ needs.versionInfo.outputs.versionCode }}
       versionName: ${{ needs.versionInfo.outputs.versionName }}
+      repoName: ${{ needs.versionInfo.outputs.repoName }}
     secrets: inherit
 
   assembleRelease:
@@ -50,6 +54,7 @@ jobs:
     with:
       versionCode: ${{ needs.versionInfo.outputs.versionCode }}
       versionName: ${{ needs.versionInfo.outputs.versionName }}
+      repoName: ${{ needs.versionInfo.outputs.repoName }}
     secrets: inherit
 
   #-------------------------------------------------------------------------------------------------
