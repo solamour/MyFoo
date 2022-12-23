@@ -58,10 +58,8 @@ jobs:
     secrets: inherit
 
   #-------------------------------------------------------------------------------------------------
-  # createRelease:
+  # release:
   #   if: github.event_name == 'push'
-  #   # needs: [testDebugUnitTest, connectedAndroidTest, assembleDebug, assembleRelease]
-  #   # needs: [assembleDebug, assembleRelease]
   #   needs: [testDebugUnitTest, assembleDebug, assembleRelease]
   #   runs-on: ubuntu-latest
   #   steps:
@@ -71,10 +69,10 @@ jobs:
   #       with:
   #         path: ./
 
-  #     - name: rename debug build
+  #     - name: rename debug artifact
   #       run: |
   #         for file_name in ./debug/*.apk; do
-  #           mv "$file_name" "$(echo "$file_name" | sed -e 's/-signed//g')"
+  #           mv "$file_name" "$(echo "$file_name" | sed -e 's/-signed//g')"  # Remove "-signed".
   #         done
 
   #     - name: set versionCode and versionName

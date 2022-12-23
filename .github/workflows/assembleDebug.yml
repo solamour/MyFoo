@@ -50,30 +50,29 @@ jobs:
 
       - name: rename artifact
         run: |
+          # Rename "app-debug-x.x.xxx.apk" to "$REPO_NAME-debug-x.x.xxx.apk".
           artifact=(./app/build/outputs/apk/debug/*.apk)    # There should be only 1 apk file. 
           dir_name="$(dirname $artifact)"                   # "./app/build/outputs/apk/debug".
           file_name="$(basename $artifact)"                 # "app-debug-x.x.xxx.apk".
           new_name="${file_name/#app/$REPO_NAME}"           # "$REPO_NAME-debug-x.x.xxx.apk".
           mv -- "$dir_name"/{"$file_name","$new_name"}
 
-      # https://github.com/marketplace/actions/sign-android-release
-      # https://github.com/r0adkll/sign-android-release/issues/71
+      # https://github.com/ilharp/sign-android-release
       - name: sign
-        uses: r0adkll/sign-android-release@v1
+        uses: ilharp/sign-android-release@v1
         id: sign
         with:
-          releaseDirectory: ./app/build/outputs/apk/debug/
-          signingKeyBase64: ${{ secrets.SIGNING_KEY_DEBUG }}
-          alias: ${{ secrets.ALIAS_DEBUG }}
+          releaseDir: ./app/build/outputs/apk/debug/
+          signingKey: ${{ secrets.SIGNING_KEY_DEBUG }}
+          keyAlias: ${{ secrets.ALIAS_DEBUG }}
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD_DEBUG }}
           keyPassword: ${{ secrets.KEY_PASSWORD_DEBUG }}
-        # env:
-        #   BUILD_TOOLS_VERSION: "32.0.0"
+          buildToolsVersion: 33.0.1
 
       # https://github.com/actions/upload-artifact
       - name: upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: debug
-          path: ${{ steps.sign.outputs.signedReleaseFile }}
+          path: ${{ steps.sign.outputs.signedFile }}
           retention-days: 1     # Default and max is 90.

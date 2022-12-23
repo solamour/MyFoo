@@ -48,10 +48,10 @@ jobs:
       - name: rename artifact
         run: |
           # Rename "app-release-x.x.xxx.apk" to "$REPO_NAME-release-x.x.xxx.apk".
-          artifact=(./app/build/outputs/apk/release/*.apk)  # There should be only 1 apk file.
-          dir_name="$(dirname $artifact)"                   # "./app/build/outputs/apk/release".
-          file_name="$(basename $artifact)"                 # "app-release-x.x.xxx.apk".
-          new_name="${file_name/#app/$REPO_NAME}"           # "$REPO_NAME-release-x.x.xxx.apk".
+          artifact=(./app/build/outputs/apk/release/*.apk)
+          dir_name="$(dirname $artifact)"
+          file_name="$(basename $artifact)"
+          new_name="${file_name/#app/$REPO_NAME}"
           mv -- "$dir_name"/{"$file_name","$new_name"}
           
           # Copy "$REPO_NAME-release-x.x.xxx.apk" to "$REPO_NAME-release-x.x.xxx-unsigned.apk".
@@ -69,18 +69,19 @@ jobs:
           retention-days: 1
 
       - name: sign
-        uses: r0adkll/sign-android-release@v1
+        uses: ilharp/sign-android-release@v1
         id: sign
         with:
-          releaseDirectory: ./app/build/outputs/apk/release/
-          signingKeyBase64: ${{ secrets.SIGNING_KEY_RELEASE }}
-          alias: ${{ secrets.ALIAS_RELEASE }}
+          releaseDir: ./app/build/outputs/apk/release/
+          signingKey: ${{ secrets.SIGNING_KEY_RELEASE }}
+          keyAlias: ${{ secrets.ALIAS_RELEASE }}
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD_RELEASE }}
           keyPassword: ${{ secrets.KEY_PASSWORD_RELEASE }}
+          buildToolsVersion: 33.0.1
 
       - name: upload signed artifact
         uses: actions/upload-artifact@v3
         with:
           name: release
-          path: ${{ steps.sign.outputs.signedReleaseFile }}
+          path: ${{ steps.sign.outputs.signedFile }}
           retention-days: 1
