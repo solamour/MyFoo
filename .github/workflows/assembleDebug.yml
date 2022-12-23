@@ -48,6 +48,14 @@ jobs:
           chmod +x ./gradlew
           ./gradlew assembleDebug
 
+      - name: rename artifact
+        run: |
+          artifact=(./app/build/outputs/apk/debug/*.apk)    # There should be only 1 apk file. 
+          dir_name="$(dirname $artifact)"                   # "./app/build/outputs/apk/debug".
+          file_name="$(basename $artifact)"                 # "app-debug-x.x.xxx.apk".
+          new_name="${file_name/#app/$REPO_NAME}"           # "$REPO_NAME-debug-x.x.xxx.apk".
+          mv -- "$dir_name"/{"$file_name","$new_name"}
+
       # https://github.com/marketplace/actions/sign-android-release
       # https://github.com/r0adkll/sign-android-release/issues/71
       - name: sign
