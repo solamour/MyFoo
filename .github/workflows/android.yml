@@ -88,25 +88,6 @@ jobs:
 
 # 🗸 ⚙️ 🆙 🛠️ 🖋️ ⬆️ ⬇️ 🔄 🏷️ 🛎️ 
 
-# # https://github.com/anothrNick/github-tag-action
-# - name: tag action
-#   id: create_tag
-#   uses: anothrNick/github-tag-action@1.36.0
-#   env:
-#     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#     DEFAULT_BUMP: patch
-#     WITH_V: true
-
-# # https://github.com/marketplace/actions/create-release
-# - name: release action
-#   uses: ncipollo/release-action@v1
-#   with:
-#     token: ${{ secrets.GITHUB_TOKEN }}
-#     tag: ${{ steps.create_tag.outputs.tag }}
-#     artifacts: >
-#       ./debug/*.apk,
-#       ./release/*.apk
-
 # - name: foo
 #   run: echo "${{ env.VERSION }}"
 
