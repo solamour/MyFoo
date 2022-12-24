@@ -24,6 +24,7 @@ jobs:
       versionCode: ${{ steps.versionInfo.outputs.versionCode }}
       versionName: ${{ steps.versionInfo.outputs.versionName }}
       repoName: ${{ steps.versionInfo.outputs.repoName }}
+      tagName: ${{ steps.versionInfo.outputs.tagName }}
     steps:
       - name: set version info
         id: versionInfo
@@ -32,12 +33,13 @@ jobs:
           echo "versionCode=$version_code" >> $GITHUB_OUTPUT
           echo "versionName=${{ env.versionName }}" >> $GITHUB_OUTPUT
           echo "repoName=${GITHUB_REPOSITORY#*/}" >> $GITHUB_OUTPUT
+          echo "tagName=${{ env.versionName }}.$version_code" >> $GITHUB_OUTPUT
 
-  testDebugUnitTest:
-    uses: ./.github/workflows/testDebugUnitTest.yml
+#  testDebugUnitTest:
+#    uses: ./.github/workflows/testDebugUnitTest.yml
 
-  # connectedDebugAndroidTest:
-  #   uses: ./.github/workflows/connectedDebugAndroidTest.yml
+#  connectedDebugAndroidTest:
+#    uses: ./.github/workflows/connectedDebugAndroidTest.yml
 
   assembleDebug:
     needs: [versionInfo]
@@ -48,66 +50,24 @@ jobs:
       repoName: ${{ needs.versionInfo.outputs.repoName }}
     secrets: inherit
 
-  assembleRelease:
-    needs: [versionInfo]
-    uses: ./.github/workflows/assembleRelease.yml
+#  assembleRelease:
+#    needs: [versionInfo]
+#    uses: ./.github/workflows/assembleRelease.yml
+#    with:
+#      versionCode: ${{ needs.versionInfo.outputs.versionCode }}
+#      versionName: ${{ needs.versionInfo.outputs.versionName }}
+#      repoName: ${{ needs.versionInfo.outputs.repoName }}
+#    secrets: inherit
+
+  release:
+#    if: github.event.pull_request.merged == true
+    if: github.event_name == 'push'
+#    needs: [versionInfo, testDebugUnitTest, assembleDebug, assembleRelease]
+    needs: [versionInfo, assembleDebug]
+    uses: ./.github/workflows/release.yml
     with:
-      versionCode: ${{ needs.versionInfo.outputs.versionCode }}
-      versionName: ${{ needs.versionInfo.outputs.versionName }}
-      repoName: ${{ needs.versionInfo.outputs.repoName }}
+      tagName: ${{ needs.versionInfo.outputs.tagName }}
     secrets: inherit
-
-  #-------------------------------------------------------------------------------------------------
-  # release:
-  #   if: github.event_name == 'push'
-  #   needs: [testDebugUnitTest, assembleDebug, assembleRelease]
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     # https://github.com/actions/download-artifact
-  #     - name: download artifact
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         path: ./
-
-  #     - name: rename debug artifact
-  #       run: |
-  #         for file_name in ./debug/*.apk; do
-  #           mv "$file_name" "$(echo "$file_name" | sed -e 's/-signed//g')"  # Remove "-signed".
-  #         done
-
-  #     - name: set versionCode and versionName
-  #       run: |
-  #         versionCode=$(( ${{ env.versionCode }} + ${{ env.offset }} ))
-  #         echo "VERSION_CODE=$versionCode" >> $GITHUB_ENV
-  #         echo "VERSION_NAME=${{ env.versionName }}.$versionCode" >> $GITHUB_ENV
-
-  #     - name: create tag
-  #       uses: actions/github-script@v3
-  #       with:
-  #         github-token: ${{ github.token }}
-  #         script: |
-  #           github.git.createRef({
-  #             owner: context.repo.owner,
-  #             repo: context.repo.repo,
-  #             ref: "refs/tags/${{ env.VERSION_NAME }}",
-  #             sha: context.sha
-  #           })          
-
-  #     # https://github.com/marketplace/actions/create-release
-  #     - name: release action
-  #       uses: ncipollo/release-action@v1
-  #       with:
-  #         token: ${{ secrets.GITHUB_TOKEN }}
-  #         tag: ${{ env.VERSION_NAME }}
-  #         artifacts: >
-  #           ./debug/*.apk,
-  #           ./release/*.apk
-
-
-
-
-
-
 
 
 
