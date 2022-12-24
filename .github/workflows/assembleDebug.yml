@@ -3,6 +3,7 @@ name: assembleDebug
 on:
   workflow_call:
     inputs:
+      # "number" (instead of "string") *might* work for "versionCode".
       versionCode:
         required: true
         type: string

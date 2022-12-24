@@ -1,0 +1,50 @@
+name: release
+
+on:
+  workflow_call:
+    inputs:
+      tagName:
+        required: true
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      # https://github.com/actions/download-artifact
+      - name: download artifact
+        uses: actions/download-artifact@v3
+        with:
+          path: ./
+
+#      - name: rename debug artifact
+#        run: |
+#          for file_name in ./debug/*.apk; do
+#            mv "$file_name" "$(echo "$file_name" | sed -e 's/-signed//g')"  # Remove "-signed".
+#          done
+
+      - name: set tagName
+        run: |
+          echo "TAG_NAME=${{ inputs.tagName }}" >> $GITHUB_ENV
+
+      - name: create tag
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ github.token }}
+          script: |
+            github.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: "refs/tags/${{ env.TAG_NAME }}",
+              sha: context.sha
+            })          
+
+      # https://github.com/marketplace/actions/create-release
+      - name: release action
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ env.TAG_NAME }}
+          artifacts: >
+            ./debug/*.apk,
+            ./release/*.apk
