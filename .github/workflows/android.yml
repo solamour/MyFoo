@@ -72,8 +72,7 @@ jobs:
     secrets: inherit
 
   release:
-#    if: {{ github.event.pull_request.merged == true || github.event_name == 'push' }}
-    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
+    if: github.event_name == 'push'
     needs: [versionInfo, testDebugUnitTest, assembleDebug, assembleRelease]
     uses: ./.github/workflows/release.yml
     with:
@@ -86,6 +85,9 @@ jobs:
 
 
 #===================================================================================================
+#    if: {{ github.event.pull_request.merged == true || github.event_name == 'push' }}
+#    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
+
 # - name: set versionCode and versionName
 #   run: |
 #     versionCode=$(( ${{ env.versionCode }} + ${{ env.offset }} ))
