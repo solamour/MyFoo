@@ -35,11 +35,17 @@ jobs:
           echo "repoName=${GITHUB_REPOSITORY#*/}" >> $GITHUB_OUTPUT
           echo "tagName=${{ env.versionName }}.$version_code" >> $GITHUB_OUTPUT
 
-  dump_contexts_to_log:
+  dumpContexts:
     runs-on: ubuntu-latest
     steps:
-      - name: github context
-        run: echo '${{ toJSON(github) }}'
+      - name: dump contexts
+        run: |
+          echo '${{ toJSON(github) }}'
+          echo '${{ toJSON(job) }}'
+          echo '${{ toJSON(steps) }}'
+          echo '${{ toJSON(runner) }}'
+          echo '${{ toJSON(strategy) }}'
+          echo '${{ toJSON(matrix) }}'
 
   testDebugUnitTest:
     uses: ./.github/workflows/testDebugUnitTest.yml
@@ -80,22 +86,6 @@ jobs:
 
 
 #===================================================================================================
-#  dump_contexts_to_log:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: github context
-#        run: echo '${{ toJSON(github) }}'
-#      - name: job context
-#        run: echo '${{ toJSON(job) }}'
-#      - name: steps context
-#        run: echo '${{ toJSON(steps) }}'
-#      - name: runner context
-#        run: echo '${{ toJSON(runner) }}'
-#      - name: strategy context
-#        run: echo '${{ toJSON(strategy) }}'
-#      - name: matrix context
-#        run: echo '${{ toJSON(matrix) }}'
-
 # - name: set versionCode and versionName
 #   run: |
 #     versionCode=$(( ${{ env.versionCode }} + ${{ env.offset }} ))
