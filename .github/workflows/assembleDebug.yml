@@ -59,6 +59,7 @@ jobs:
           mv -- "$dir_name"/{"$file_name","$new_name"}
 
       # https://github.com/ilharp/sign-android-release
+      # openssl base64 < signing_key.jks | tr -d '\n'       # Required for signing key only.
       - name: sign
         uses: ilharp/sign-android-release@v1
         id: sign
