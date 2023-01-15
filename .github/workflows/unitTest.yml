@@ -1,17 +1,20 @@
-name: testDebugUnitTest
+name: unitTest
 
 on:
   workflow_call:
 
 jobs:
-  testDebugUnitTest:
+  unitTest:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        buildVariants: [testDebugUnitTest, testReleaseUnitTest]
     steps:
       # https://github.com/actions/checkout
       - name: checkout
         uses: actions/checkout@v3
 
-      - name: testDebugUnitTest
+      - name: unitTest
         run: |
           chmod +x gradlew
-          ./gradlew testDebugUnitTest
+          ./gradlew ${{ matrix.buildVariants }}

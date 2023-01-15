@@ -1,11 +1,14 @@
-name: connectedDebugAndroidTest
+name: connectedAndroidTest
 
 on:
   workflow_call:
 
 jobs:
-  connectedDebugAndroidTest:
+  connectedAndroidTest:
     runs-on: macos-latest
+    strategy:
+      matrix:
+        buildVariants: [connectedDebugAndroidTest]
     steps:
       - uses: actions/checkout@v3
       - name: setup java
@@ -23,4 +26,4 @@ jobs:
           arch: x86_64
           script: |
             chmod +x gradlew
-            ./gradlew connectedDebugAndroidTest
+            ./gradlew ${{ matrix.buildVariants }}
