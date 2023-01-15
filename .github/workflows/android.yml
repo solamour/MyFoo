@@ -47,11 +47,11 @@ jobs:
           echo '${{ toJSON(strategy) }}'
           echo '${{ toJSON(matrix) }}'
 
-  testDebugUnitTest:
-    uses: ./.github/workflows/testDebugUnitTest.yml
+  unitTest:
+    uses: ./.github/workflows/unitTest.yml
 
-#  connectedDebugAndroidTest:
-#    uses: ./.github/workflows/connectedDebugAndroidTest.yml
+#  connectedAndroidTest:
+#    uses: ./.github/workflows/connectedAndroidTest.yml
 
   assembleDebug:
     needs: [versionInfo]
@@ -73,14 +73,12 @@ jobs:
 
   release:
     if: github.event_name == 'push'
-    needs: [versionInfo, testDebugUnitTest, assembleDebug, assembleRelease]
+    needs: [versionInfo, unitTest, assembleDebug, assembleRelease]
     uses: ./.github/workflows/release.yml
     with:
+      repoName: ${{ needs.versionInfo.outputs.repoName }}
       tagName: ${{ needs.versionInfo.outputs.tagName }}
     secrets: inherit
-
-
-
 
 #===================================================================================================
 #    if: {{ github.event.pull_request.merged == true || github.event_name == 'push' }}

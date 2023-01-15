@@ -29,6 +29,11 @@ jobs:
           distribution: 'adopt'
           cache: gradle
 
+      # https://github.com/android-actions/setup-android
+      # Required only when using "self-hosted".
+#      - name: set up android sdk
+#        uses: android-actions/setup-android@v2
+
       - name: set versionCode and versionName 
         run: |
           echo "VERSION_CODE=${{ inputs.versionCode }}" >> $GITHUB_ENV
@@ -44,22 +49,45 @@ jobs:
           versionCode: ${{ env.VERSION_CODE }}
           versionName: ${{ env.VERSION_NAME }}
 
+#      - name: set local properties
+#        env:
+#          API_KEY: ${{ secrets.MAPS_API_KEY }}
+#          run: echo MAPS_API_KEY="$MAPS_API_KEY" >> ./local.properties
+
+#      # https://stackoverflow.com/a/68147075/4957915
+#      - name: set gradle properties
+#        env:
+#          GRADLE_PROPERTIES: ${{ secrets.GRADLE_PROPERTIES }}
+#          run: |
+#            mkdir -p ~/.gradle/
+#            echo "GRADLE_USER_HOME=${HOME}/.gradle" >> $GITHUB_ENV
+#            echo "${GRADLE_PROPERTIES}" > ~/.gradle/gradle.properties
+
       - name: build
         run: |
           chmod +x ./gradlew
           ./gradlew assembleDebug
 
-      - name: rename artifact
+      # "app-debug.apk" -> "$REPO_NAME-${{ env.VERSION_NAME }}-debug.apk"
+      - name: rename unsigned artifact
+        id: rename_unsigned
         run: |
-          # Rename "app-debug-x.x.xxx.apk" to "$REPO_NAME-debug-x.x.xxx.apk".
-          artifact=(./app/build/outputs/apk/debug/*.apk)    # There should be only 1 apk file. 
-          dir_name="$(dirname $artifact)"                   # "./app/build/outputs/apk/debug".
-          file_name="$(basename $artifact)"                 # "app-debug-x.x.xxx.apk".
-          new_name="${file_name/#app/$REPO_NAME}"           # "$REPO_NAME-debug-x.x.xxx.apk".
-          mv -- "$dir_name"/{"$file_name","$new_name"}
+          full_path=(./app/build/outputs/apk/debug/*.apk)
+          dir_name="$(dirname $full_path)"
+          file_name="$(basename $full_path)"
+          artifact="${file_name/#app/$REPO_NAME-${{ env.VERSION_NAME }}}"
+          mv -- "$dir_name"/{"$file_name","$artifact"}
 
       # https://github.com/ilharp/sign-android-release
-      # openssl base64 < signing_key.jks | tr -d '\n'       # Required for signing key only.
+      # openssl base64 < signing_key.jks | tr -d '\n'       # Required for SIGNING_KEY only.
+      #
+      # After signing, "./app/build/outputs/apk/debug/" will contain following files.
+      #   $REPO_NAME-${{ env.VERSION_NAME }}-debug-signed.apk
+      #   $REPO_NAME-${{ env.VERSION_NAME }}-debug-signed.apk.idsig
+      #   $REPO_NAME-${{ env.VERSION_NAME }}-debug-temp.apk
+      #   $REPO_NAME-${{ env.VERSION_NAME }}-debug.apk
+      #   key.jks
+      #   output-metadata.json
       - name: sign
         uses: ilharp/sign-android-release@v1
         id: sign
@@ -71,10 +99,21 @@ jobs:
           keyPassword: ${{ secrets.KEY_PASSWORD_DEBUG }}
           buildToolsVersion: 33.0.1
 
+      # "$REPO_NAME-${{ env.VERSION_NAME }}-debug-signed.apk" ->
+      # "$REPO_NAME-${{ env.VERSION_NAME }}-debug.apk"
+      - name: rename signed artifact
+        id: rename_signed
+        run: |
+          signed_file=${{ steps.sign.outputs.signedFile }}
+          artifact=$(echo "$signed_file" | sed -e 's/-signed//g')
+          mv -- "$signed_file" "$artifact"
+  
+          echo "ARTIFACT=$artifact" >> $GITHUB_OUTPUT
+
       # https://github.com/actions/upload-artifact
       - name: upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: debug
-          path: ${{ steps.sign.outputs.signedFile }}
+          name: ${{ env.REPO_NAME }}_${{ env.VERSION_NAME }}
+          path: ${{ steps.rename_signed.outputs.ARTIFACT }}
           retention-days: 1     # Default and max is 90.
