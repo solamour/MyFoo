@@ -57,11 +57,19 @@ jobs:
 
           echo "ARTIFACT=$artifact" >> $GITHUB_OUTPUT
 
-      - name: upload signed artifact
+      - name: upload unsigned artifact
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.REPO_NAME }}_${{ env.VERSION_NAME }}
           path: ${{ steps.rename_unsigned.outputs.ARTIFACT }}
+          retention-days: 1
+
+      # Upload separately from unsigned artifact to put all files in top level.
+      - name: upload map file
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.REPO_NAME }}_${{ env.VERSION_NAME }}
+          path: ./app/build/outputs/mapping/release/mapping.txt
           retention-days: 1
 
       # "$REPO_NAME-${{ env.VERSION_NAME }}-release-unsigned.apk" ->
