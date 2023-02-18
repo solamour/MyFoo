@@ -80,6 +80,17 @@ jobs:
       tagName: ${{ needs.versionInfo.outputs.tagName }}
     secrets: inherit
 
+#  retrieveRelease:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: retrieve release
+#        run: |
+#          ls -la
+#          gh release list --repo solamour/MyFoo
+#          gh release download --repo solamour/MyFoo --pattern '*.apk'
+#        env:
+#          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
 #===================================================================================================
 #    if: {{ github.event.pull_request.merged == true || github.event_name == 'push' }}
 #    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true

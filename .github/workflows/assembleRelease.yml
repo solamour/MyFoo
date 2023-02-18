@@ -64,7 +64,7 @@ jobs:
           path: ${{ steps.rename_unsigned.outputs.ARTIFACT }}
           retention-days: 1
 
-      # Upload separately from unsigned artifact to put all files in top level.
+      # Upload separately from unsigned artifact to prevent creating sub directories.
       - name: upload map file
         uses: actions/upload-artifact@v3
         with:
