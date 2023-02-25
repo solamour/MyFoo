@@ -35,6 +35,8 @@ class MainActivity : AppCompatActivity() {
         binding.fab.setOnClickListener {
             foo()
         }
+
+        foo()
     }
 
     private fun foo() {
