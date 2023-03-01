@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <group android:id="@+id/list">
+        <item
+            android:id="@+id/get_area_list"
+            android:title="Get area list"
+            app:showAsAction="never" />
+
+        <item
+            android:id="@+id/get_product_list"
+            android:title="Get product list"
+            app:showAsAction="never" />
+    </group>
+
+    <group android:id="@+id/certificates">
+        <item
+            android:id="@+id/create_csr"
+            android:title="Create CSR"
+            app:showAsAction="never" />
+
+        <item
+            android:id="@+id/create_certificates"
+            android:title="Create Certificates"
+            app:showAsAction="never" />
+
+        <item
+            android:id="@+id/query_status"
+            android:title="Query status"
+            app:showAsAction="never" />
+    </group>
+
+    <item
+        android:id="@+id/sign_with_device_key"
+        android:title="Sign with device key"
+        app:showAsAction="never" />
+
+    <group android:id="@+id/read">
+        <item
+            android:id="@+id/read_device_certificate"
+            android:title="Read device certificate"
+            app:showAsAction="never" />
+
+        <item
+            android:id="@+id/read_certificate_chain"
+            android:title="Read certificate chain"
+            app:showAsAction="never" />
+    </group>
+
+    <group android:id="@+id/write">
+        <item
+            android:id="@+id/write_certificates"
+            android:title="⚠️ Write certificates"
+            app:showAsAction="never" />
+    </group>
+
+    <item
+        android:id="@+id/get_crl"
+        android:title="Get CRL"
+        app:showAsAction="never" />
+</menu>
