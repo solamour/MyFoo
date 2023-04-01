@@ -16,13 +16,8 @@
 
     <group android:id="@+id/certificates">
         <item
-            android:id="@+id/create_csr"
-            android:title="Create CSR"
-            app:showAsAction="never" />
-
-        <item
             android:id="@+id/create_certificates"
-            android:title="Create Certificates"
+            android:title="⚙️ Create Certificates"
             app:showAsAction="never" />
 
         <item

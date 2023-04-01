@@ -87,10 +87,6 @@ class MainActivity : AppCompatActivity() {
                 true
             }
 
-            R.id.create_csr -> {
-                viewModel.createCsr()
-                true
-            }
             R.id.create_certificates -> {
                 lifecycleScope.launch {
                     viewModel.createCertificates()
