@@ -13,7 +13,7 @@ android {
         minSdk 26
         targetSdk 33
         versionCode 1
-        versionName "1.0.1"
+        versionName "1.0"       // Release tag will be "1.0.x".
 
         testInstrumentationRunner("androidx.test.runner.AndroidJUnitRunner")
         vectorDrawables {
