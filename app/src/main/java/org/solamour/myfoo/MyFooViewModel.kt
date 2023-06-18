@@ -13,6 +13,7 @@ import androidx.core.app.AlarmManagerCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -46,7 +47,7 @@ class MyFooViewModel(
 
     fun log(string: String = "") {
         val timestamp = DateTimeFormatter.ofPattern("mm:ss.SSS").format(LocalDateTime.now())
-        val log = "[$timestamp] $string"
+        val log = if (string.isEmpty()) string else "[$timestamp] $string"
         logList.add(log)
         Log.d(TAG, log)
     }

@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">MyFoo</string>
+    <string name="clear_log">Clear log</string>
     <string name="hello_world">Hello World</string>
+    <string name="log_cleared">Log cleared</string>
+    <string name="more">more</string>
+    <string name="play">play</string>
 </resources>

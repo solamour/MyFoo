@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.MoreVert
@@ -42,7 +41,6 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.Wallpapers
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import org.solamour.myfoo.ui.theme.MyFooTheme
 
@@ -56,11 +54,10 @@ fun MyFoo(
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
+    var expanded by remember { mutableStateOf(false) }
     val lazyListState = rememberLazyListState()
     val lifecycleOwner = LocalLifecycleOwner.current
     val snackbarHostState = remember { SnackbarHostState() }
-
-    var expanded by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = logList.size) {
         if (logList.isNotEmpty()) {
@@ -75,19 +72,11 @@ fun MyFoo(
                 title = {
                     Text(text = stringResource(R.string.app_name))
                 },
-                navigationIcon = {
-                    IconButton(onClick = {  }) {
-                        Icon(
-                            imageVector = Icons.Filled.Menu,
-                            contentDescription = null,
-                        )
-                    }
-                },
                 actions = {
                     IconButton(onClick = { expanded = !expanded }) {
                         Icon(
                             imageVector = Icons.Outlined.MoreVert,
-                            contentDescription = "More",
+                            contentDescription = stringResource(id = R.string.more),
                         )
                     }
                     DropdownMenu(
@@ -95,10 +84,12 @@ fun MyFoo(
                         onDismissRequest = { expanded = false },
                     ) {
                         DropdownMenuItem(
-                            text = { Text("Clear log") },
+                            text = { Text(stringResource(id = R.string.clear_log)) },
                             onClick = {
                                 coroutineScope.launch {
-                                    snackbarHostState.showSnackbar(message = "Log cleared")
+                                    snackbarHostState.showSnackbar(
+                                        message = context.resources.getString(R.string.log_cleared)
+                                    )
                                 }
                                 onClearLog()
                                 expanded = false
@@ -116,12 +107,10 @@ fun MyFoo(
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = onPlay,
-            ) {
+            FloatingActionButton(onClick = onPlay) {
                 Icon(
                     imageVector = Icons.Filled.PlayArrow,
-                    contentDescription = null,
+                    contentDescription = stringResource(id = R.string.play),
                     tint = MaterialTheme.colorScheme.surface,
                 )
             }
