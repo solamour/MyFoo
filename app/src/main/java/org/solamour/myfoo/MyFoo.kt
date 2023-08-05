@@ -127,7 +127,7 @@ fun MyFoo(
                     text = listItem,
                     modifier = Modifier.fillMaxWidth(),
                     fontFamily = FontFamily.Monospace,
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MaterialTheme.typography.bodyMedium,
                 )
             }
         }
