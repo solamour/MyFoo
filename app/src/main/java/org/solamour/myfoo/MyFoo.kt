@@ -35,7 +35,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
@@ -56,7 +55,7 @@ fun MyFoo(
     val coroutineScope = rememberCoroutineScope()
     var expanded by remember { mutableStateOf(false) }
     val lazyListState = rememberLazyListState()
-    val lifecycleOwner = LocalLifecycleOwner.current
+//    val lifecycleOwner = LocalLifecycleOwner.current
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(key1 = logList.size) {
