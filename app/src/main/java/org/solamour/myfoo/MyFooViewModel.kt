@@ -70,7 +70,7 @@ class MyFooViewModel(
         val notification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
             .setContentTitle("content_title")
             .setContentText("content_text")
-            .setVibrate(longArrayOf(0, 1000, 1000, 1000))
+            .setVibrate(longArrayOf(0, 1_000, 1_000, 1_000))
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .build()
