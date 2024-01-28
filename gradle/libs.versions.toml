@@ -1,0 +1,45 @@
+[versions]
+android-application = "8.2.2"
+jetbrains-kotlin-android = "1.9.22"
+
+activity-compose = "1.8.2"              # https://developer.android.com/jetpack/androidx/releases/activity
+compose-bom = "2024.01.00"              # https://developer.android.com/jetpack/compose/bom/bom-mapping
+core-ktx = "1.12.0"                     # https://developer.android.com/jetpack/androidx/releases/core, "targetSdk = 32" -> "1.7.0"
+espresso-core = "3.5.1"                 # https://developer.android.com/jetpack/androidx/releases/test
+junit = "4.13.2"                        # https://mvnrepository.com/artifact/junit/junit
+junit-ktx = "1.1.5"                     # https://developer.android.com/jetpack/androidx/releases/test
+lifecycle-runtime-ktx = "2.7.0"         # https://developer.android.com/jetpack/androidx/releases/lifecycle
+lorem = "2.2"                           # https://github.com/mdeanda/lorem
+material = "1.11.0"                     # https://github.com/material-components/material-components-android
+navigation-compose = "2.7.6"            # https://developer.android.com/jetpack/androidx/releases/navigation
+compileSdk = "34"
+minSdk = "26"
+targetSdk = "34"
+versionCode = "1"
+versionName = "1.0.x"
+
+[libraries]
+activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
+compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
+compose-material3 = { module = "androidx.compose.material3:material3" }
+compose-ui = { module = "androidx.compose.ui:ui" }
+compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
+compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
+compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
+espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso-core" }
+junit = { module = "junit:junit", version.ref = "junit" }
+junit-ktx = { module = "androidx.test.ext:junit-ktx", version.ref = "junit-ktx" }
+lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
+lorem = { module = "com.thedeanda:lorem", version.ref = "lorem" }
+material = { module = "com.google.android.material:material", version.ref = "material" }
+navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation-compose" }
+
+[bundles]
+compose  = [ "compose-ui", "compose-ui-graphics" ]
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "android-application" }
+jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "jetbrains-kotlin-android" }

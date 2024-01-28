@@ -1,63 +1,61 @@
+import org.gradle.internal.os.OperatingSystem
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.5.31"
 }
 
-import java.io.FileInputStream
-import java.util.Properties
-import org.gradle.internal.os.OperatingSystem
-
-// https://developer.android.com/studio/publish/app-signing#secure-shared-keystore
 val keystoreProperties = Properties()
 keystoreProperties["keyAlias"] = "mykeystore"
 
-var keystorePropertiesFile: File
-if (OperatingSystem.current().isLinux()) {
-    keystorePropertiesFile = rootProject.file("/home/solamour/Dropbox/mystuff/myrelease.keystore")
-    keystoreProperties["storeFile"] = "/home/solamour/Dropbox/mystuff/mykeystore.jks"
-    keystoreProperties["serviceCredentialsFile"] = "/home/solamour/Dropbox/mystuff/myapp_firebase_distribution.json"
-    keystoreProperties["debug.keystore"] = "/home/solamour/Dropbox/mystuff/debug.keystore"
-    //keystorePropertiesFile = rootProject.file("/mnt/c/Users/solamour/Dropbox/mystuff/myrelease.keystore")
-    //keystoreProperties["storeFile"] = "/mnt/c/Users/solamour/Dropbox/mystuff/mykeystore.jks"
-    //keystoreProperties["serviceCredentialsFile"] = "/mnt/c/Users/solamour/Dropbox/mystuff/myapp_firebase_distribution.json"
-    //keystoreProperties["debug.keystore"] = "/mnt/c/Users/solamour/Dropbox/mystuff/debug.keystore"
-} else if (OperatingSystem.current().isWindows()) {
-    keystorePropertiesFile = rootProject.file("C:\\Users\\solamour\\Dropbox\\mystuff\\myrelease.keystore")
-    keystoreProperties["storeFile"] = "C:\\Users\\solamour\\Dropbox\\mystuff\\mykeystore.jks"
-    keystoreProperties["serviceCredentialsFile"] = "C:\\Users\\solamour\\Dropbox\\mystuff\\myapp_firebase_distribution.json"
-    keystoreProperties["debug.keystore"] = "C:\\Users\\solamour\\Dropbox\\mystuff\\debug.keystore"
-} else if (OperatingSystem.current().isMacOsX()) {
-    keystorePropertiesFile = rootProject.file("/Users/a7536987/Downloads/mystuff/myrelease.keystore")
-    keystoreProperties["storeFile"] = "/Users/a7536987/Downloads/mystuff/mykeystore.jks"
-    keystoreProperties["serviceCredentialsFile"] = "/Users/a7536987/Downloads/mystuff/myapp_firebase_distribution.json"
-    keystoreProperties["debug.keystore"] = "/Users/a7536987/Downloads/mystuff/debug.keystore"
-} else {
-    println("Unknown OS")
-    keystorePropertiesFile = File("")
+val keystorePropertiesFile: File = when {
+    OperatingSystem.current().isLinux -> {
+        keystoreProperties["debug.keystore"] = "/home/solamour/Dropbox/mystuff/debug.keystore"
+        keystoreProperties["storeFile"] = "/home/solamour/Dropbox/mystuff/mykeystore.jks"
+        keystoreProperties["serviceCredentialsFile"] = "/home/solamour/Dropbox/mystuff/myapp_firebase_distribution.json"
+        rootProject.file("/home/solamour/Dropbox/mystuff/myrelease.keystore")
+    }
+    OperatingSystem.current().isWindows -> {
+        keystoreProperties["debug.keystore"] = "C:\\Users\\solamour\\Dropbox\\mystuff\\debug.keystore"
+        keystoreProperties["storeFile"] = "C:\\Users\\solamour\\Dropbox\\mystuff\\mykeystore.jks"
+        keystoreProperties["serviceCredentialsFile"] = "C:\\Users\\solamour\\Dropbox\\mystuff\\myapp_firebase_distribution.json"
+        rootProject.file("C:\\Users\\solamour\\Dropbox\\mystuff\\myrelease.keystore")
+    }
+    OperatingSystem.current().isMacOsX -> {
+        keystoreProperties["debug.keystore"] = "/Users/a7536987/Downloads/mystuff/debug.keystore"
+        keystoreProperties["storeFile"] = "/Users/a7536987/Downloads/mystuff/mykeystore.jks"
+        keystoreProperties["serviceCredentialsFile"] = "/Users/a7536987/Downloads/mystuff/myapp_firebase_distribution.json"
+        rootProject.file("/Users/a7536987/Downloads/mystuff/myrelease.keystore")
+    }
+    else -> {
+        println("Unknown OS")
+        File("")
+    }
 }
-keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+keystoreProperties.load(keystorePropertiesFile.inputStream())
 
 android {
     namespace = "org.solamour.myfoo"
-    compileSdk = 34
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "org.solamour.myfoo"
-        minSdk = 26
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0.x"   // Release tag will be "1.0.x".
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
+        versionCode = libs.versions.versionCode.get().toInt()
+        versionName = libs.versions.versionName.get()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        //------------------------------------------------------------------------------------------
     }
 
-    // https://developer.android.com/studio/publish/app-signing.html
     signingConfigs {
-        // If defined, it overrides Android SDK's default "debug.keystore".
         getByName("debug") {
             storeFile = file(keystoreProperties["debug.keystore"] as String)
             storePassword = "android"
@@ -73,9 +71,13 @@ android {
     }
 
     buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
+        debug {
+        }
+
+        release {
+            isMinifyEnabled = true
             signingConfig = signingConfigs["release"]
+
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
@@ -97,8 +99,7 @@ android {
     }
 
     composeOptions {
-        // https://developer.android.com/jetpack/androidx/releases/compose-kotlin
-        kotlinCompilerExtensionVersion = "1.5.3"
+        kotlinCompilerExtensionVersion = "1.5.8"
     }
 
     packaging {
@@ -106,36 +107,31 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    //----------------------------------------------------------------------------------------------
 }
 
 dependencies {
-    implementation("androidx.activity:activity-compose:1.8.1")
-    implementation("androidx.core:core-ktx:1.12.0")         // "targetSdk = 32" -> "1.7.0".
-    implementation("androidx.navigation:navigation-compose:2.7.5")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation(libs.activity.compose)
+    implementation(libs.core.ktx)
+    implementation(libs.lifecycle.runtime.ktx)
+    implementation(platform(libs.compose.bom))
+    implementation(libs.compose.material3)
+    implementation(libs.compose.ui)
+    implementation(libs.compose.ui.graphics)
+    implementation(libs.compose.ui.tooling.preview)
+    implementation(libs.navigation.compose)
 
-    // https://developer.android.com/jetpack/compose/bom/bom-mapping
-    val composeBom = platform("androidx.compose:compose-bom:2023.09.01")
-    implementation(composeBom)
-    implementation("androidx.compose.foundation:foundation")
-    implementation("androidx.compose.material3:material3")
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.compose.ui:ui-tooling-preview")
+    testImplementation(libs.junit)
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.compose.ui.test.junit4)
+    androidTestImplementation(libs.espresso.core)
+    androidTestImplementation(libs.junit.ktx)
 
-    implementation("com.google.android.material:material:1.10.0")
+    debugImplementation(libs.compose.ui.test.manifest)
+    debugImplementation(libs.compose.ui.tooling)
 
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation(composeBom)
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.5")
-
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
-
-    implementation("com.thedeanda:lorem:2.1")
+    //----------------------------------------------------------------------------------------------
+    implementation(libs.lorem)
+    implementation(libs.material)
 }

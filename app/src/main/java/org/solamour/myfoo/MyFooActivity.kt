@@ -94,7 +94,7 @@ private fun Home(
     ) {
         composable(
             route = "myfoo",
-        ) { navBackStackEntry ->
+        ) { _ ->    // navBackStackEntry ->
             MyFoo(
                 logList = viewModel.logList,
                 onPlay = viewModel::onPlay,

@@ -7,7 +7,9 @@
           <value>
             <InsightsFilterSettings>
               <option name="connection">
-                <ConnectionSetting />
+                <ConnectionSetting>
+                  <option name="appId" value="org.solamour.myapp" />
+                </ConnectionSetting>
               </option>
               <option name="failureTypes">
                 <list>
@@ -16,6 +18,23 @@
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
               <option name="timeIntervalDays" value="SEVEN_DAYS" />
+              <option name="visibilityType" value="ALL" />
+            </InsightsFilterSettings>
+          </value>
+        </entry>
+        <entry key="Firebase Crashlytics">
+          <value>
+            <InsightsFilterSettings>
+              <option name="connection">
+                <ConnectionSetting>
+                  <option name="appId" value="org.solamour.myfoo" />
+                  <option name="mobileSdkAppId" value="1:631388564026:android:bd1d2892477fd6226fe303" />
+                  <option name="projectId" value="myfoo-ex" />
+                  <option name="projectNumber" value="631388564026" />
+                </ConnectionSetting>
+              </option>
+              <option name="signal" value="SIGNAL_UNSPECIFIED" />
+              <option name="timeIntervalDays" value="THIRTY_DAYS" />
               <option name="visibilityType" value="ALL" />
             </InsightsFilterSettings>
           </value>
