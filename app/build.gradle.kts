@@ -2,8 +2,8 @@ import org.gradle.internal.os.OperatingSystem
 import java.util.Properties
 
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.com.android.application)
+    alias(libs.plugins.org.jetbrains.kotlin.android)
 }
 
 val keystoreProperties = Properties()
@@ -112,26 +112,31 @@ android {
 }
 
 dependencies {
-    implementation(libs.activity.compose)
-    implementation(libs.core.ktx)
-    implementation(libs.lifecycle.runtime.ktx)
-    implementation(platform(libs.compose.bom))
-    implementation(libs.compose.material3)
-    implementation(libs.compose.ui)
-    implementation(libs.compose.ui.graphics)
-    implementation(libs.compose.ui.tooling.preview)
-    implementation(libs.navigation.compose)
+    // Android
+    implementation(libs.androidx.activity.activity.compose)
+    implementation(libs.androidx.core.core.ktx)
+    implementation(libs.androidx.lifecycle.lifecycle.runtime.ktx)
+    implementation(libs.androidx.navigation.navigation.compose)
 
-    testImplementation(libs.junit)
-    androidTestImplementation(platform(libs.compose.bom))
-    androidTestImplementation(libs.compose.ui.test.junit4)
-    androidTestImplementation(libs.espresso.core)
-    androidTestImplementation(libs.junit.ktx)
+    // Compose
+    implementation(platform(libs.androidx.compose.compose.bom))
+    implementation(libs.androidx.compose.material3.material3)
+    implementation(libs.androidx.compose.ui.ui)
+    implementation(libs.androidx.compose.ui.ui.tooling.preview)
+    debugImplementation(libs.androidx.compose.ui.ui.test.manifest)
+    debugImplementation(libs.androidx.compose.ui.ui.tooling)
 
-    debugImplementation(libs.compose.ui.test.manifest)
-    debugImplementation(libs.compose.ui.tooling)
+    // Instrumented Test
+    androidTestImplementation(platform(libs.androidx.compose.compose.bom))
+    androidTestImplementation(libs.androidx.compose.ui.ui.test.junit4)
+    androidTestImplementation(libs.androidx.test.espresso.espresso.core)
+    androidTestImplementation(libs.androidx.test.ext.junit.ktx)
+
+    // Unit Test
+    testImplementation(libs.junit.junit)
 
     //----------------------------------------------------------------------------------------------
-    implementation(libs.lorem)
-    implementation(libs.material)
+    implementation(libs.com.google.android.material.material)
+
+    implementation(libs.com.thedeanda.lorem)
 }
