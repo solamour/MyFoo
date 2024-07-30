@@ -1,11 +1,11 @@
 [versions]
-activity-compose = "1.9.0"                      # https://developer.android.com/jetpack/androidx/releases/activity
-compose-bom = "2024.05.00"                      # https://developer.android.com/jetpack/compose/bom/bom-mapping
+activity-compose = "1.9.1"                      # https://developer.android.com/jetpack/androidx/releases/activity
+compose-bom = "2024.06.00"                      # https://developer.android.com/jetpack/compose/bom/bom-mapping
 core-ktx = "1.13.1"                             # https://developer.android.com/jetpack/androidx/releases/core
-lifecycle = "2.7.0"                             # https://developer.android.com/jetpack/androidx/releases/lifecycle
+lifecycle = "2.8.4"                             # https://developer.android.com/jetpack/androidx/releases/lifecycle
 navigation = "2.7.7"                            # https://developer.android.com/jetpack/androidx/releases/navigation
-espresso = "3.5.1"                              # https://developer.android.com/jetpack/androidx/releases/test
-junit-ktx = "1.1.5"                             # https://developer.android.com/jetpack/androidx/releases/test
+espresso = "3.6.1"                              # https://developer.android.com/jetpack/androidx/releases/test
+junit-ktx = "1.2.1"                             # https://developer.android.com/jetpack/androidx/releases/test
 material = "1.12.0"                             # https://github.com/material-components/material-components-android
 lorem = "2.2"                                   # https://github.com/mdeanda/lorem
 junit = "4.13.2"                                # https://github.com/junit-team/junit4
@@ -16,7 +16,7 @@ targetSdk = "34"
 versionCode = "1"
 versionName = "1.0.x"
 
-com-android-application = "8.4.0"               # https://developer.android.com/build/releases/gradle-plugin
+com-android-application = "8.5.1"               # https://developer.android.com/build/releases/gradle-plugin
 org-jetbrains-kotlin-android = "1.9.22"         # https://kotlinlang.org/docs/releases.html#release-details
 
 [libraries]
