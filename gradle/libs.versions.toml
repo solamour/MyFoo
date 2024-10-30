@@ -1,23 +1,23 @@
 [versions]
-activity-compose = "1.9.1"                      # https://developer.android.com/jetpack/androidx/releases/activity
-compose-bom = "2024.06.00"                      # https://developer.android.com/jetpack/compose/bom/bom-mapping
-core-ktx = "1.13.1"                             # https://developer.android.com/jetpack/androidx/releases/core
-lifecycle = "2.8.4"                             # https://developer.android.com/jetpack/androidx/releases/lifecycle
-navigation = "2.7.7"                            # https://developer.android.com/jetpack/androidx/releases/navigation
+activity-compose = "1.9.3"                      # https://developer.android.com/jetpack/androidx/releases/activity
+compose-bom = "2024.10.01"                      # https://developer.android.com/jetpack/compose/bom/bom-mapping
+core-ktx = "1.15.0"                             # https://developer.android.com/jetpack/androidx/releases/core
+lifecycle = "2.8.7"                             # https://developer.android.com/jetpack/androidx/releases/lifecycle
+navigation = "2.8.3"                            # https://developer.android.com/jetpack/androidx/releases/navigation
 espresso = "3.6.1"                              # https://developer.android.com/jetpack/androidx/releases/test
 junit-ktx = "1.2.1"                             # https://developer.android.com/jetpack/androidx/releases/test
 material = "1.12.0"                             # https://github.com/material-components/material-components-android
 lorem = "2.2"                                   # https://github.com/mdeanda/lorem
 junit = "4.13.2"                                # https://github.com/junit-team/junit4
 
-compileSdk = "34"
+compileSdk = "35"
 minSdk = "26"
-targetSdk = "34"
+targetSdk = "35"
 versionCode = "1"
 versionName = "1.0.x"
 
-com-android-application = "8.5.1"               # https://developer.android.com/build/releases/gradle-plugin
-org-jetbrains-kotlin-android = "1.9.22"         # https://kotlinlang.org/docs/releases.html#release-details
+com-android-application = "8.7.1"               # https://developer.android.com/build/releases/gradle-plugin
+org-jetbrains-kotlin = "2.0.20"                 # https://kotlinlang.org/docs/releases.html#release-details
 
 [libraries]
 androidx-activity-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
@@ -45,4 +45,5 @@ compose  = [
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "com-android-application" }
-org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "org-jetbrains-kotlin-android" }
+org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "org-jetbrains-kotlin" }
+org-jetbrains-kotlin-plugin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "org-jetbrains-kotlin" }
