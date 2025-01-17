@@ -36,8 +36,8 @@ import org.solamour.myfoo.ui.theme.MyFooTheme
 class ExampleInstrumentedTest {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<ComponentActivity>() // Set content manually.
-//     val composeTestRule = createAndroidComposeRule<MyFooActivity>()  // Let Activity set content.
-//    val composeTestRule = createComposeRule()    // When accessing Activity is not necessary.
+//    val composeTestRule = createAndroidComposeRule<MyFooActivity>() // Let Activity set content.
+//    val composeTestRule = createComposeRule()   // When accessing Activity is not necessary.
 
     private val viewModel by lazy {
         MyFooViewModel(composeTestRule.activity.application)

@@ -13,7 +13,6 @@ import androidx.core.app.AlarmManagerCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -60,6 +59,7 @@ class MyFooViewModel(
         log(LoremIpsum.getInstance().firstNameFemale)
     }
 
+    //----------------------------------------------------------------------------------------------
     private fun showNotification() {
         val context = application.applicationContext
         val notificationManager = ContextCompat.getSystemService(

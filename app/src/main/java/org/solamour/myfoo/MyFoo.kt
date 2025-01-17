@@ -34,6 +34,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
@@ -54,13 +57,21 @@ fun MyFoo(
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     var expanded by remember { mutableStateOf(false) }
+    val focusRequester = remember { FocusRequester() }
+    var isSizeChanged by remember { mutableStateOf(false) }
     val lazyListState = rememberLazyListState()
-//    val lifecycleOwner = LocalLifecycleOwner.current
+    //val lifecycleOwner = LocalLifecycleOwner.current
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(key1 = logList.size) {
         if (logList.isNotEmpty()) {
             lazyListState.animateScrollToItem(logList.size - 1)
+        }
+    }
+
+    LaunchedEffect(key1 = isSizeChanged) {
+        if (isSizeChanged) {
+            focusRequester.requestFocus()
         }
     }
 
@@ -106,7 +117,12 @@ fun MyFoo(
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
-            FloatingActionButton(onClick = onPlay) {
+            FloatingActionButton(
+                onClick = onPlay,
+                modifier = Modifier
+                    .focusRequester(focusRequester)
+                    .onSizeChanged { isSizeChanged = true },
+            ) {
                 Icon(
                     imageVector = Icons.Filled.PlayArrow,
                     contentDescription = stringResource(id = R.string.play),
@@ -117,7 +133,9 @@ fun MyFoo(
         floatingActionButtonPosition = FabPosition.End,
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier.fillMaxSize().padding(paddingValues),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
             state = lazyListState,
             contentPadding = PaddingValues(horizontal = 16.dp),
         ) {
