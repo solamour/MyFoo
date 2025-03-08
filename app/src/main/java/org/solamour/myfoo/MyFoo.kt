@@ -1,5 +1,7 @@
 package org.solamour.myfoo
 
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,9 +10,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,20 +38,28 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Wallpapers
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.thedeanda.lorem.LoremIpsum
 import kotlinx.coroutines.launch
+import org.solamour.myfoo.ui.theme.MyFooTheme
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyFoo(
+    logList: List<LogItem>,
     modifier: Modifier = Modifier,
-    viewModel: MyFooViewModel = viewModel(
-        factory = MyFooViewModel.factory()
-    )
+    onPlay: () -> Unit,
+    onClearLog: () -> Unit,
 ) {
+    val activity = LocalActivity.current.takeIf { !LocalInspectionMode.current }
+            as? ComponentActivity ?: LocalActivity.current
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     var expanded by remember { mutableStateOf(false) }
@@ -58,9 +68,9 @@ fun MyFoo(
     val lazyListState = rememberLazyListState()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(key1 = viewModel.logList.size) {
-        if (viewModel.logList.isNotEmpty()) {
-            lazyListState.animateScrollToItem(viewModel.logList.size - 1)
+    LaunchedEffect(key1 = logList.size) {
+        if (logList.isNotEmpty()) {
+            lazyListState.animateScrollToItem(logList.size - 1)
         }
     }
 
@@ -80,7 +90,7 @@ fun MyFoo(
                 actions = {
                     IconButton(onClick = { expanded = !expanded }) {
                         Icon(
-                            imageVector = Icons.Outlined.MoreVert,
+                            imageVector = Icons.Default.MoreVert,
                             contentDescription = stringResource(id = R.string.more),
                         )
                     }
@@ -91,7 +101,7 @@ fun MyFoo(
                         DropdownMenuItem(
                             text = { Text(stringResource(id = R.string.clear_log)) },
                             onClick = {
-                                viewModel.onClearLog()
+                                onClearLog()
                                 coroutineScope.launch {
                                     snackbarHostState.showSnackbar(
                                         message = context.resources.getString(R.string.log_cleared)
@@ -101,7 +111,7 @@ fun MyFoo(
                             },
                             leadingIcon = {
                                 Icon(
-                                    Icons.Outlined.Delete,
+                                    Icons.Default.Delete,
                                     contentDescription = null
                                 )
                             }
@@ -113,13 +123,13 @@ fun MyFoo(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = viewModel::onPlay,
+                onClick = onPlay,
                 modifier = Modifier
                     .focusRequester(focusRequester)
                     .onSizeChanged { isSizeChanged = true },
             ) {
                 Icon(
-                    imageVector = Icons.Filled.PlayArrow,
+                    imageVector = Icons.Default.PlayArrow,
                     contentDescription = stringResource(id = R.string.play),
                     tint = MaterialTheme.colorScheme.surface,
                 )
@@ -132,7 +142,7 @@ fun MyFoo(
             state = lazyListState,
             contentPadding = PaddingValues(horizontal = 16.dp),
         ) {
-            items(items = viewModel.logList, key = { it.key }) { listItem ->
+            items(items = logList, key = { it.key }) { listItem ->
                 Text(
                     text = listItem.log,
                     modifier = Modifier.fillMaxWidth(),
@@ -141,5 +151,25 @@ fun MyFoo(
                 )
             }
         }
+    }
+}
+
+//--------------------------------------------------------------------------------------------------
+@Preview(
+    showSystemUi = true,
+    showBackground = true,
+    wallpaper = Wallpapers.GREEN_DOMINATED_EXAMPLE
+)
+@Composable
+fun MyFooPreview() {
+    MyFooTheme(dynamicColor = false) {
+        MyFoo(
+            logList = List(10) {
+                val timestamp = DateTimeFormatter.ofPattern("mm:ss.SSS").format(LocalDateTime.now())
+                LogItem(log = "[$timestamp] ${LoremIpsum.getInstance().firstNameFemale}")
+            },
+            onPlay = {},
+            onClearLog = {},
+        )
     }
 }
