@@ -6,8 +6,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import org.solamour.myfoo.MyFooActivity.Companion.NOTIFICATION_CHANNEL_ID
-import org.solamour.myfoo.MyFooActivity.Companion.NOTIFICATION_ID
 
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
