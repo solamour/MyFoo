@@ -48,7 +48,6 @@ private fun Home(
 ) {
     MyFoo(
         logList = viewModel.logList,
-        onPlay = viewModel::onPlay,
-        onClearLog = viewModel::onClearLog,
+        onAction = viewModel::onAction,
     )
 }

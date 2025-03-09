@@ -55,8 +55,7 @@ import java.time.format.DateTimeFormatter
 fun MyFoo(
     logList: List<LogItem>,
     modifier: Modifier = Modifier,
-    onPlay: () -> Unit,
-    onClearLog: () -> Unit,
+    onAction: (Action) -> Unit,
 ) {
     val activity = LocalActivity.current.takeIf { !LocalInspectionMode.current }
             as? ComponentActivity ?: LocalActivity.current
@@ -101,7 +100,7 @@ fun MyFoo(
                         DropdownMenuItem(
                             text = { Text(stringResource(id = R.string.clear_log)) },
                             onClick = {
-                                onClearLog()
+                                onAction(Action.ClearLog)
                                 coroutineScope.launch {
                                     snackbarHostState.showSnackbar(
                                         message = context.resources.getString(R.string.log_cleared)
@@ -123,7 +122,9 @@ fun MyFoo(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = onPlay,
+                onClick = {
+                    onAction(Action.Play)
+                },
                 modifier = Modifier
                     .focusRequester(focusRequester)
                     .onSizeChanged { isSizeChanged = true },
@@ -168,8 +169,7 @@ fun MyFooPreview() {
                 val timestamp = DateTimeFormatter.ofPattern("mm:ss.SSS").format(LocalDateTime.now())
                 LogItem(log = "[$timestamp] ${LoremIpsum.getInstance().firstNameFemale}")
             },
-            onPlay = {},
-            onClearLog = {},
+            onAction = {},
         )
     }
 }

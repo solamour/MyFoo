@@ -32,20 +32,25 @@ class MyFooViewModel(
     init {
     }
 
+    fun onAction(action: Action) {
+        when (action) {
+            Action.Play -> log(LoremIpsum.getInstance().firstNameFemale)
+            Action.ClearLog -> _logList.clear()
+        }
+    }
+
     fun log(string: String = "") {
         val timestamp = DateTimeFormatter.ofPattern("mm:ss.SSS").format(LocalDateTime.now())
         val log = if (string.isEmpty()) string else "[$timestamp] $string"
         _logList.add(LogItem(log = log))
         Log.d(TAG, log)
     }
+}
 
-    fun onClearLog() {
-        _logList.clear()
-    }
-
-    fun onPlay() {
-        log(LoremIpsum.getInstance().firstNameFemale)
-    }
+//--------------------------------------------------------------------------------------------------
+sealed interface Action {
+    data object Play : Action
+    data object ClearLog : Action
 }
 
 //----------------------------------------------------------------------------------------------
