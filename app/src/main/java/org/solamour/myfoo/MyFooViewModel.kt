@@ -34,16 +34,20 @@ class MyFooViewModel(
 
     fun onAction(action: Action) {
         when (action) {
-            Action.Play -> log(LoremIpsum.getInstance().firstNameFemale)
+            Action.Play -> onPlay()
             Action.ClearLog -> _logList.clear()
         }
     }
 
-    fun log(string: String = "") {
+    private fun log(string: String = "") {
         val timestamp = DateTimeFormatter.ofPattern("mm:ss.SSS").format(LocalDateTime.now())
         val log = if (string.isEmpty()) string else "[$timestamp] $string"
         _logList.add(LogItem(log = log))
         Log.d(TAG, log)
+    }
+
+    private fun onPlay() {
+        log(LoremIpsum.getInstance().firstNameFemale)
     }
 }
 
