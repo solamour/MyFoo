@@ -3,9 +3,11 @@ package org.solamour.myfoo
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -137,6 +139,7 @@ fun MyFoo(
             }
         },
         floatingActionButtonPosition = FabPosition.End,
+        contentWindowInsets = WindowInsets.safeDrawing,
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(paddingValues),

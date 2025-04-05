@@ -25,14 +25,7 @@ class MyFooActivity : ComponentActivity() {
 
         setContent {
             MyFooTheme(dynamicColor = false) {
-                Surface(
-                    modifier = Modifier.fillMaxSize().windowInsetsPadding(
-                        WindowInsets.safeDrawing.exclude(WindowInsets.statusBars)
-                    ),
-                    color = MaterialTheme.colorScheme.background,
-                ) {
-                    Home()
-                }
+                Home()
             }
         }
 
