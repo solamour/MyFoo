@@ -29,9 +29,6 @@ class MyFooViewModel(
         private val TAG = MyFooViewModel::class.qualifiedName
     }
 
-    init {
-    }
-
     fun onAction(action: Action) {
         when (action) {
             Action.Play -> onPlay()
