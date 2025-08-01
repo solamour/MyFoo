@@ -1,14 +1,14 @@
 [versions]
 activity-compose = "1.10.1"                     # https://developer.android.com/jetpack/androidx/releases/activity
-compose-bom = "2025.06.01"                      # https://developer.android.com/jetpack/compose/bom/bom-mapping
-core-ktx = "1.16.0"                             # https://developer.android.com/jetpack/androidx/releases/core
-espresso = "3.6.1"                              # https://developer.android.com/jetpack/androidx/releases/test
+compose-bom = "2025.08.01"                      # https://developer.android.com/jetpack/compose/bom/bom-mapping
+core-ktx = "1.17.0"                             # https://developer.android.com/jetpack/androidx/releases/core
+espresso = "3.7.0"                              # https://developer.android.com/jetpack/androidx/releases/test
 junit = "4.13.2"                                # https://github.com/junit-team/junit4
-junit-ktx = "1.2.1"                             # https://developer.android.com/jetpack/androidx/releases/test
-lifecycle = "2.9.1"                             # https://developer.android.com/jetpack/androidx/releases/lifecycle
+junit-ktx = "1.3.0"                             # https://developer.android.com/jetpack/androidx/releases/test
+lifecycle = "2.9.3"                             # https://developer.android.com/jetpack/androidx/releases/lifecycle
 lorem = "2.2"                                   # https://github.com/mdeanda/lorem
-material = "1.12.0"                             # https://github.com/material-components/material-components-android
-navigation = "2.9.1"                            # https://developer.android.com/jetpack/androidx/releases/navigation
+material = "1.13.0"                             # https://github.com/material-components/material-components-android
+navigation = "2.9.3"                            # https://developer.android.com/jetpack/androidx/releases/navigation
 
 compileSdk = "36"
 minSdk = "26"
@@ -16,8 +16,8 @@ targetSdk = "36"
 versionCode = "1"
 versionName = "1.0.x"
 
-com-android-application = "8.11.0"              # https://developer.android.com/build/releases/gradle-plugin
-org-jetbrains-kotlin = "2.2.0"                 # https://kotlinlang.org/docs/releases.html#release-details
+com-android-application = "8.13.0"              # https://developer.android.com/build/releases/gradle-plugin
+org-jetbrains-kotlin = "2.2.20"                 # https://kotlinlang.org/docs/releases.html#release-details
 
 [libraries]
 androidx-activity-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
