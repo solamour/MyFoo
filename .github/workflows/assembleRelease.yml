@@ -16,6 +16,8 @@ on:
 jobs:
   assembleRelease:
     runs-on: ubuntu-latest
+    env:
+      ARTIFACTS: ./artifacts
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -46,65 +48,42 @@ jobs:
           ./gradlew assembleRelease
 
       # "app-release-unsigned.apk" -> "$REPO_NAME-${{ env.VERSION_NAME }}-release-unsigned.apk"
-      - name: rename unsigned artifact
-        id: rename_unsigned
+      #   full_path: "./app/build/outputs/apk/release/app-release-unsigned.apk"
+      #   file_name: "app-release-unsigned.apk"
+      #   artifact:  "${{ env.ARTIFACTS }}/MyFoo-x.x.xxx-release-unsigned.apk"
+      - name: copy unsigned artifact
         run: |
           full_path=(./app/build/outputs/apk/release/*.apk)
-          dir_name="$(dirname $full_path)"
           file_name="$(basename $full_path)"
-          artifact="$dir_name/${file_name/#app/$REPO_NAME-${{ env.VERSION_NAME }}}"
-          mv -- "$full_path" "$artifact"
+          artifact="${{ env.ARTIFACTS }}/${file_name/#app/$REPO_NAME-${{ env.VERSION_NAME }}}"
+          mkdir -p "${{ env.ARTIFACTS }}"
+          cp -- "$full_path" "$artifact"
 
-          echo "ARTIFACT=$artifact" >> $GITHUB_OUTPUT
-
-      - name: upload unsigned artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ env.REPO_NAME }}_${{ env.VERSION_NAME }}
-          path: ${{ steps.rename_unsigned.outputs.ARTIFACT }}
-          retention-days: 1
-
-      # Upload separately from unsigned artifact to prevent creating sub directories.
-      - name: upload map file
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ env.REPO_NAME }}_${{ env.VERSION_NAME }}
-          path: ./app/build/outputs/mapping/release/mapping.txt
-          retention-days: 1
-
-      # "$REPO_NAME-${{ env.VERSION_NAME }}-release-unsigned.apk" ->
-      # "$REPO_NAME-${{ env.VERSION_NAME }}-release.apk"
-      - name: remove "-unsigned"
+      - name: copy map files
         run: |
-          src_file_name=(./app/build/outputs/apk/release/*.apk)
-          dest_file_name=$(echo "$src_file_name" | sed -e 's/-unsigned//g')
-          mv "$src_file_name" "$dest_file_name"
+          cp ./app/build/outputs/mapping/release/* "${{ env.ARTIFACTS }}"
 
       - name: sign
-        uses: ilharp/sign-android-release@v1
-        id: sign
+        uses: ilharp/sign-android-release@v2
         with:
           releaseDir: ./app/build/outputs/apk/release/
           signingKey: ${{ secrets.SIGNING_KEY_RELEASE }}
           keyAlias: ${{ secrets.ALIAS_RELEASE }}
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD_RELEASE }}
           keyPassword: ${{ secrets.KEY_PASSWORD_RELEASE }}
-          buildToolsVersion: 33.0.1
+          buildToolsVersion: 36.0.0
 
-      # "$REPO_NAME-${{ env.VERSION_NAME }}-release-signed.apk" ->
-      # "$REPO_NAME-${{ env.VERSION_NAME }}-release.apk"
-      - name: rename signed artifact
-        id: rename_signed
+      # "app-release-unsigned-signed.apk" -> "$REPO_NAME-${{ env.VERSION_NAME }}-release.apk"
+      - name: copy signed artifact
         run: |
-          signed_file=${{ steps.sign.outputs.signedFile }}
-          artifact=$(echo "$signed_file" | sed -e 's/-signed//g')
-          mv -- "$signed_file" "$artifact"
+          full_path=(./app/build/outputs/apk/release/*.apk)
+          file_name="$(basename $full_path)"
+          artifact="${{ env.ARTIFACTS }}/$REPO_NAME-${{ env.VERSION_NAME }}-release.apk"
+          cp -- "$full_path" "$artifact"
 
-          echo "ARTIFACT=$artifact" >> $GITHUB_OUTPUT
-
-      - name: upload signed artifact
-        uses: actions/upload-artifact@v3
+      - name: upload artifacts
+        uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.REPO_NAME }}_${{ env.VERSION_NAME }}
-          path: ${{ steps.rename_signed.outputs.ARTIFACT }}
+          name: ${{ env.REPO_NAME }}_release_${{ env.VERSION_NAME }}
+          path: ${{ env.ARTIFACTS }}/*
           retention-days: 1
