@@ -70,7 +70,6 @@ jobs:
 
       # "app-debug.apk" -> "$REPO_NAME-${{ env.VERSION_NAME }}-debug.apk"
       - name: rename unsigned artifact
-        id: rename_unsigned
         run: |
           full_path=(./app/build/outputs/apk/debug/*.apk)
           dir_name="$(dirname $full_path)"
@@ -89,7 +88,7 @@ jobs:
       #   key.jks
       #   output-metadata.json
       - name: sign
-        uses: ilharp/sign-android-release@v1
+        uses: ilharp/sign-android-release@v2
         id: sign
         with:
           releaseDir: ./app/build/outputs/apk/debug/
@@ -97,7 +96,7 @@ jobs:
           keyAlias: ${{ secrets.ALIAS_DEBUG }}
           keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD_DEBUG }}
           keyPassword: ${{ secrets.KEY_PASSWORD_DEBUG }}
-          buildToolsVersion: 33.0.1
+          buildToolsVersion: 36.0.0
 
       # "$REPO_NAME-${{ env.VERSION_NAME }}-debug-signed.apk" ->
       # "$REPO_NAME-${{ env.VERSION_NAME }}-debug.apk"
@@ -107,13 +106,12 @@ jobs:
           signed_file=${{ steps.sign.outputs.signedFile }}
           artifact=$(echo "$signed_file" | sed -e 's/-signed//g')
           mv -- "$signed_file" "$artifact"
-  
           echo "ARTIFACT=$artifact" >> $GITHUB_OUTPUT
 
       # https://github.com/actions/upload-artifact
       - name: upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.REPO_NAME }}_${{ env.VERSION_NAME }}
+          name: ${{ env.REPO_NAME }}_debug_${{ env.VERSION_NAME }}
           path: ${{ steps.rename_signed.outputs.ARTIFACT }}
           retention-days: 1     # Default and max is 90.

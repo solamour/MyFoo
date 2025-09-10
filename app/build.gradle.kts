@@ -1,4 +1,5 @@
 import org.gradle.internal.os.OperatingSystem
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
 plugins {
@@ -10,31 +11,34 @@ plugins {
 val keystoreProperties = Properties()
 keystoreProperties["keyAlias"] = "mykeystore"
 
-val keystorePropertiesFile: File = when {
-    OperatingSystem.current().isLinux -> {
-        keystoreProperties["debug.keystore"] = "/home/solamour/Dropbox/mystuff/debug.keystore"
-        keystoreProperties["storeFile"] = "/home/solamour/Dropbox/mystuff/mykeystore.jks"
-        keystoreProperties["serviceCredentialsFile"] = "/home/solamour/Dropbox/mystuff/myapp_firebase_distribution.json"
-        rootProject.file("/home/solamour/Dropbox/mystuff/myrelease.keystore")
+val localBuild = System.getenv("GITHUB_ACTIONS") == null && System.getenv("CI") == null
+if (localBuild) {
+    val keystorePropertiesFile: File = when {
+        OperatingSystem.current().isLinux -> {
+            keystoreProperties["debug.keystore"] = "/home/solamour/Dropbox/mystuff/debug.keystore"
+            keystoreProperties["storeFile"] = "/home/solamour/Dropbox/mystuff/mykeystore.jks"
+            keystoreProperties["serviceCredentialsFile"] = "/home/solamour/Dropbox/mystuff/myapp_firebase_distribution.json"
+            rootProject.file("/home/solamour/Dropbox/mystuff/myrelease.keystore")
+        }
+        OperatingSystem.current().isWindows -> {
+            keystoreProperties["debug.keystore"] = "C:\\Users\\solamour\\Dropbox\\mystuff\\debug.keystore"
+            keystoreProperties["storeFile"] = "C:\\Users\\solamour\\Dropbox\\mystuff\\mykeystore.jks"
+            keystoreProperties["serviceCredentialsFile"] = "C:\\Users\\solamour\\Dropbox\\mystuff\\myapp_firebase_distribution.json"
+            rootProject.file("C:\\Users\\solamour\\Dropbox\\mystuff\\myrelease.keystore")
+        }
+        OperatingSystem.current().isMacOsX -> {
+            keystoreProperties["debug.keystore"] = "/Users/a7536987/Downloads/mystuff/debug.keystore"
+            keystoreProperties["storeFile"] = "/Users/a7536987/Downloads/mystuff/mykeystore.jks"
+            keystoreProperties["serviceCredentialsFile"] = "/Users/a7536987/Downloads/mystuff/myapp_firebase_distribution.json"
+            rootProject.file("/Users/a7536987/Downloads/mystuff/myrelease.keystore")
+        }
+        else -> {
+            println("Unknown OS")
+            File("")
+        }
     }
-    OperatingSystem.current().isWindows -> {
-        keystoreProperties["debug.keystore"] = "C:\\Users\\solamour\\Dropbox\\mystuff\\debug.keystore"
-        keystoreProperties["storeFile"] = "C:\\Users\\solamour\\Dropbox\\mystuff\\mykeystore.jks"
-        keystoreProperties["serviceCredentialsFile"] = "C:\\Users\\solamour\\Dropbox\\mystuff\\myapp_firebase_distribution.json"
-        rootProject.file("C:\\Users\\solamour\\Dropbox\\mystuff\\myrelease.keystore")
-    }
-    OperatingSystem.current().isMacOsX -> {
-        keystoreProperties["debug.keystore"] = "/Users/a7536987/Downloads/mystuff/debug.keystore"
-        keystoreProperties["storeFile"] = "/Users/a7536987/Downloads/mystuff/mykeystore.jks"
-        keystoreProperties["serviceCredentialsFile"] = "/Users/a7536987/Downloads/mystuff/myapp_firebase_distribution.json"
-        rootProject.file("/Users/a7536987/Downloads/mystuff/myrelease.keystore")
-    }
-    else -> {
-        println("Unknown OS")
-        File("")
-    }
+    keystoreProperties.load(keystorePropertiesFile.inputStream())
 }
-keystoreProperties.load(keystorePropertiesFile.inputStream())
 
 android {
     namespace = "org.solamour.myfoo"
@@ -56,7 +60,7 @@ android {
         //------------------------------------------------------------------------------------------
     }
 
-    signingConfigs {
+    if (localBuild) signingConfigs {
         getByName("debug") {
             storeFile = file(keystoreProperties["debug.keystore"] as String)
             storePassword = "android"
@@ -76,7 +80,9 @@ android {
         }
         getByName("release") {
             isMinifyEnabled = true
-            signingConfig = signingConfigs["release"]
+            if (localBuild) {
+                signingConfig = signingConfigs["release"]
+            }
 
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -90,8 +96,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+    kotlin {
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_11
+        }
     }
 
     buildFeatures {

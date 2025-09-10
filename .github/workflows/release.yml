@@ -15,7 +15,7 @@ jobs:
     steps:
       # https://github.com/actions/download-artifact
       - name: download artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v5
         with:
           path: ./
 
@@ -34,7 +34,7 @@ jobs:
               repo: context.repo.repo,
               ref: "refs/tags/${{ env.TAG_NAME }}",
               sha: context.sha
-            })          
+            })
 
       # https://github.com/marketplace/actions/create-release
       - name: release action
@@ -43,4 +43,4 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ env.TAG_NAME }}
           artifacts: >
-            ./${{ env.REPO_NAME }}_${{ env.TAG_NAME }}/*.apk
+            ./${{ env.REPO_NAME }}_*_${{ env.TAG_NAME }}/*
