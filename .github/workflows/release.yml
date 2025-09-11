@@ -24,12 +24,25 @@ jobs:
           echo "REPO_NAME=${{ inputs.repoName }}" >> $GITHUB_ENV
           echo "TAG_NAME=${{ inputs.tagName }}" >> $GITHUB_ENV
 
+      - name: zip
+        run: |          
+          DEBUG_DIR=${{ env.REPO_NAME }}_debug_${{ env.TAG_NAME }}
+          (cd "./$DEBUG_DIR" && \
+            zip -r ../${{ env.REPO_NAME }}_debug_${{ env.TAG_NAME }}.zip .)
+
+          RELEASE_DIR=${{ env.REPO_NAME }}_release_${{ env.TAG_NAME }}
+          (cd "./$RELEASE_DIR" && \
+            zip -r ../${{ env.REPO_NAME }}_release_${{ env.TAG_NAME }}.zip .)
+
+          ls -laR ./
+
+      # https://github.com/actions/github-script
       - name: create tag
-        uses: actions/github-script@v3
+        uses: actions/github-script@v8
         with:
           github-token: ${{ github.token }}
           script: |
-            github.git.createRef({
+            github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: "refs/tags/${{ env.TAG_NAME }}",
@@ -43,4 +56,4 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ env.TAG_NAME }}
           artifacts: >
-            ./${{ env.REPO_NAME }}_*_${{ env.TAG_NAME }}/*
+            ./${{ env.REPO_NAME }}_*_${{ env.TAG_NAME }}.zip
