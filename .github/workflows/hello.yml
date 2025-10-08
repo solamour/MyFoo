@@ -1,0 +1,23 @@
+# act (-r) -j hello
+
+name: Hello World
+
+on:
+  workflow_dispatch:
+
+jobs:
+  hello:
+    runs-on: ubuntu-latest
+    steps:
+      - name: say hello world
+        id: hello
+        run: |
+          echo "Hello World"
+
+  secret:
+    runs-on: ubuntu-latest
+    steps:
+      - name: show secret
+        id: secret
+        run: |
+          echo "secret: ${{ secrets.MY_SECRET }}"

@@ -49,7 +49,7 @@ android {
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = libs.versions.versionCode.get().toInt()
-        versionName = libs.versions.versionName.get()
+        versionName = libs.versions.versionName.get() + versionCode
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -102,14 +102,6 @@ android {
         }
     }
 
-    buildFeatures {
-        compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
-    }
-
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -128,6 +120,7 @@ dependencies {
 
     // Compose
     implementation(platform(libs.androidx.compose.compose.bom))
+    implementation(libs.androidx.compose.material.material.icons.core)
     implementation(libs.androidx.compose.material3.material3)
     implementation(libs.androidx.compose.ui.ui)
     implementation(libs.androidx.compose.ui.ui.tooling.preview)
