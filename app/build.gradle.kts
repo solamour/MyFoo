@@ -4,7 +4,7 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.com.android.application)
-    alias(libs.plugins.org.jetbrains.kotlin.android)
+    //alias(libs.plugins.org.jetbrains.kotlin.android)
     alias(libs.plugins.org.jetbrains.kotlin.plugin.compose)
 }
 
@@ -96,12 +96,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-    kotlin {
-        compilerOptions {
-            jvmTarget = JvmTarget.JVM_11
-        }
-    }
-
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -116,7 +110,9 @@ dependencies {
     implementation(libs.androidx.activity.activity.compose)
     implementation(libs.androidx.core.core.ktx)
     implementation(libs.androidx.lifecycle.lifecycle.runtime.ktx)
-    implementation(libs.androidx.navigation.navigation.compose)
+    implementation(libs.androidx.lifecycle.lifecycle.viewmodel.navigation3)
+    implementation(libs.androidx.navigation3.navigation3.runtime)
+    implementation(libs.androidx.navigation3.navigation3.ui)
 
     // Compose
     implementation(platform(libs.androidx.compose.compose.bom))
@@ -140,4 +136,11 @@ dependencies {
     implementation(libs.com.google.android.material.material)
 
     implementation(libs.com.thedeanda.lorem)
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_11)
+        languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_0)
+    }
 }

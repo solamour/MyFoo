@@ -1,6 +1,6 @@
 [versions]
-activity-compose = "1.12.2"                     # https://developer.android.com/jetpack/androidx/releases/activity
-compose-bom = "2026.01.00"                      # https://developer.android.com/jetpack/compose/bom/bom-mapping
+activity-compose = "1.12.4"                     # https://developer.android.com/jetpack/androidx/releases/activity
+compose-bom = "2026.02.01"                      # https://developer.android.com/jetpack/compose/bom/bom-mapping
 core-ktx = "1.17.0"                             # https://developer.android.com/jetpack/androidx/releases/core
 espresso = "3.7.0"                              # https://developer.android.com/jetpack/androidx/releases/test
 junit = "4.13.2"                                # https://github.com/junit-team/junit4
@@ -9,7 +9,7 @@ lifecycle = "2.10.0"                            # https://developer.android.com/
 lorem = "2.2"                                   # https://github.com/mdeanda/lorem
 material = "1.13.0"                             # https://github.com/material-components/material-components-android
 material-icons-core = "1.7.8"                   # https://developer.android.com/jetpack/androidx/releases/compose-material
-navigation = "2.9.6"                            # https://developer.android.com/jetpack/androidx/releases/navigation
+navigation3 = "1.0.1"                           # https://developer.android.com/jetpack/androidx/releases/navigation3
 
 compileSdk = "36"
 minSdk = "26"
@@ -17,8 +17,8 @@ targetSdk = "36"
 versionCode = "1"
 versionName = "1.0."
 
-com-android-application = "9.0.0"              # https://developer.android.com/build/releases/gradle-plugin
-org-jetbrains-kotlin = "2.3.0"                 # https://kotlinlang.org/docs/releases.html#release-details
+com-android-application = "9.1.0"              # https://developer.android.com/build/releases/gradle-plugin
+org-jetbrains-kotlin = "2.3.10"                # https://kotlinlang.org/docs/releases.html#release-details
 
 [libraries]
 androidx-activity-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
@@ -32,7 +32,9 @@ androidx-compose-ui-ui-tooling = { group = "androidx.compose.ui", name = "ui-too
 androidx-compose-ui-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-core-core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
 androidx-lifecycle-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
-androidx-navigation-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
+androidx-lifecycle-lifecycle-viewmodel-navigation3 = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-navigation3", version.ref = "lifecycle" }
+androidx-navigation3-navigation3-runtime = { group = "androidx.navigation3", name = "navigation3-runtime", version.ref = "navigation3" }
+androidx-navigation3-navigation3-ui = { group = "androidx.navigation3", name = "navigation3-ui", version.ref = "navigation3" }
 androidx-test-espresso-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso" }
 androidx-test-ext-junit-ktx = { module = "androidx.test.ext:junit-ktx", version.ref = "junit-ktx" }
 com-google-android-material-material = { module = "com.google.android.material:material", version.ref = "material" }
