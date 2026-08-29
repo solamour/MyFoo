@@ -15,7 +15,7 @@ jobs:
     steps:
       # https://github.com/actions/download-artifact
       - name: download artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           path: ./
 
