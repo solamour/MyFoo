@@ -79,6 +79,7 @@ android {
         }
         getByName("release") {
             isMinifyEnabled = true
+            isShrinkResources = true
             if (localBuild) {
                 signingConfig = signingConfigs["release"]
             }

@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        buildVariants: [testDebugUnitTest, testReleaseUnitTest]
+        buildVariants: [testDebugUnitTest]    # "testReleaseUnitTest" unavailable in recent AGP.
     steps:
       # https://github.com/actions/checkout
       - name: checkout
